@@ -20,3 +20,19 @@ Route::group([
     Route::crud('exam', 'ExamCrudController');
     Route::crud('company', 'CompanyCrudController');
 }); // this should be the absolute last line of this file
+
+Route::group(
+    [
+        'namespace'  => 'App\Http\Controllers',
+        'middleware' => config('backpack.base.web_middleware', 'web'),
+        'prefix'     => config('backpack.base.route_prefix'),
+    ],
+function () {
+    // Registration Routes...
+    if (config('backpack.base.setup_auth_routes')) {
+        Route::post('register', [RegisterController::class, 'register']);
+        Route::post('login', [RegisterController::class, 'login']);
+        Route::post('category', [ExamController::class, 'getCategory']);
+        Route::post('exam', [ExamController::class, 'getExam']);
+    }
+});
