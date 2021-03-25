@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('register', [RegisterController::class, 'register']);
-Route::post('login', [RegisterController::class, 'login']);
-Route::post('category', [ExamController::class, 'getCategory']);
-Route::post('exam', [ExamController::class, 'getExam']);
+Route::post('register', 'App\Http\Controllers\API\RegisterController@register');
+Route::post('login', 'App\Http\Controllers\API\RegisterController@login');
+Route::post('category', 'App\Http\Controllers\API\ExamController@getCategory');
+Route::post('exam','App\Http\Controllers\API\ExamController@getExam');
