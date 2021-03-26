@@ -63,7 +63,8 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
                 $exam = DB::table('questions')
                         ->leftjoin('answers','answers.question_id','=','questions.id')
-                        ->select('questions.*','answers.*')
+                        ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type',
+                        'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
                         ->get();
                         // dd($exam);
