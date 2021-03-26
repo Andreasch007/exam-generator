@@ -66,7 +66,7 @@ class ExamController extends BaseController
                         ->select('questions.*','answers.*')
                         ->where('questions.exam_id','=',$exam_id)
                         ->get();
-                        dd($exam);
+                        // dd($exam);
             }
             return $this->sendResponse($exam, 'Success');
         }else{ 
