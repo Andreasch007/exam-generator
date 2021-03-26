@@ -52,10 +52,10 @@ class ExamController extends BaseController
     }
 
     public function getQuestion(Request $request){
-        if(isset($_POST['email']) && isset($_POST['category_id'])){
+        if(isset($_POST['email']) && isset($_POST['exam_id'])){
             $user = Auth::user();
             $email = $_POST['email'];
-            $category_id=$_POST['category_id'];
+            $exam_id=$_POST['exam_id'];
             $query = DB::table('users')
                     ->select(DB::raw('COUNT(users.id) as totalemail'))
                     ->where('email',$email)
@@ -65,7 +65,7 @@ class ExamController extends BaseController
                         ->join('questions','questions.exam_id','=','exams.id')
                         ->join('answers','answers.question_id','=','questions.id')
                         ->select('questions.*','answers.*')
-                        ->where('exams.category_id','=',$category_id)
+                        ->where('exams.id','=',$exam_id)
                         ->get();
             }
             return $this->sendResponse($exam, 'Success');
