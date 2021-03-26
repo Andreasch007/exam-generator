@@ -104,7 +104,7 @@ class ExamCrudController extends CrudController
             [
                 'label'     => 'Exam Name',
                 'name'      => 'exam_name',
-                'type'      => 'Text',
+                'type'      => 'text',
             ],
             [
                 'label'     => "Category",
