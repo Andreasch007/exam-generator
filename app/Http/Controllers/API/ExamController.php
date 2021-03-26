@@ -62,7 +62,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $exam = DB::table('questions')
-                        ->join('answers','answers.question_id','=','questions.id')
+                        ->leftjoin('answers','answers.question_id','=','questions.id')
                         ->select('questions.*','answers.*')
                         ->where('questions.exam_id','=',$exam_id)
                         ->get();
