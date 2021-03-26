@@ -61,12 +61,12 @@ class ExamController extends BaseController
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $exam = DB::table('exams')
-                        ->join('questions','questions.exam_id','=','exams.id')
+                $exam = DB::table('questions')
                         ->join('answers','answers.question_id','=','questions.id')
                         ->select('questions.*','answers.*')
-                        ->where('exams.id','=',$exam_id)
+                        ->where('questions.exam_id','=',$exam_id)
                         ->get();
+                        dd($exam);
             }
             return $this->sendResponse($exam, 'Success');
         }else{ 
