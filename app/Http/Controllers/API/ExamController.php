@@ -61,14 +61,11 @@ class ExamController extends BaseController
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $exam = DB::table('questions as q')
-                        ->leftjoin('answers as a','answers.question_id','=','questions.id')
-                        // ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id',
-                        // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
-                        ->select(DB::raw('count(a.id) as totalanswer, q.id as question_id, q.question_desc1, q.question_desc2, q.question_type
-                        a.answers_desc1, a.answers_desc2, a.answers_val'))
+                $exam = DB::table('questions')
+                        ->leftjoin('answers','answers.question_id','=','questions.id')
+                        ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id',
+                        'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
-                        ->groupBy('q.id')
                         ->get();
                         // dd($exam);
             }
