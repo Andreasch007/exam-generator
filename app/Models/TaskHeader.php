@@ -37,7 +37,7 @@ class TaskHeader extends Model
         $("#btn-gen").click(function() {
             $.ajax({
                 type: "POST",
-                url: "/exam-generator/public/admin/generate/'.$this->id.'",
+                url: "https://exam.graylite.com/admin/generate/'.$this->id.'",
                 dataType: "json",
             }).done(function(){
                 alert("Success Generate");
