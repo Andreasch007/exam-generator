@@ -35,9 +35,9 @@ class UserApproval extends Model
         ->select('approval')
         ->first();
         
-    foreach ($data as $datas)
+    // foreach ($data as $datas)
     //     {
-            if($data->approval == 'Approved')
+            if($this->approval == 'Approved')
             {
                 return "<span class='badge' style='background-color:green'>".$this->approval."</span>";
             }
@@ -48,9 +48,9 @@ class UserApproval extends Model
         // echo $data;
 
         
-        //return '<span style="color:red">'.$this->approval.'<span>'>'.';
+         //return '<span style="color:red">'.$this->approval.'<span>'>'.';
+        // }
     }
-
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
