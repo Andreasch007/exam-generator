@@ -44,13 +44,13 @@ class UserApprovalController extends CrudController
         // CRUD::setFromDb(); // columns
         CRUD::addColumns([
             [
-               'label' => 'User',
-               'name'  => 'name',
+               'label' => 'ID',
+               'name'  => 'id',
                'limit' => 150,
             ],
             [
                 'label' => 'Company',
-                'name'  => 'company',
+                'name'  => 'name',
                 'limit' => 150,
             ],
             [
@@ -84,13 +84,13 @@ class UserApprovalController extends CrudController
         CRUD::addFields([
             
              [
-                'label' =>  'Name',
-                'name'  =>  'name',
-                'type'  =>  'text'
+                'label' =>  'ID',
+                'name'  =>  'id',
+                'type'  =>  'hidden'
              ],
              [
                 'label' => 'Company',
-                'name'  => 'company',
+                'name'  => 'name',
                 'limit' => 150,
             ],
             [
