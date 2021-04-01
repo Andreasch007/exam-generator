@@ -16,6 +16,8 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('user_id')->unsigned();
+            $table->boolean('approved')->default(0);
             $table->timestamps();
             $table->string('company');
             $table->enum('approval',['Need Approval','Approved']);

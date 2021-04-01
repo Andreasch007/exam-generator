@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExamsTable extends Migration
+class CreateTaskTransHeadersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('task_trans_headers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('category_id')->unsigned();
-            $table->integer('user_id');
-            $table->integer('company_id');
-            $table->integer('exam_no');
-            $table->string('exam_name');
+            $table->integer('exam_id')->unsigned();
+            $table->date('doc_date');
+            $table->time('start_time', $precision = 0);
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('task_trans_headers');
     }
 }

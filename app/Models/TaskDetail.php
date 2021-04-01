@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
-class Company extends Model
+class TaskDetail extends Model
 {
     use CrudTrait;
 
@@ -16,7 +15,7 @@ class Company extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'companies';
+    protected $table = 'task_trans_details';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -28,14 +27,13 @@ class Company extends Model
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
-    */    
+    */
 
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
 
     /*
     |--------------------------------------------------------------------------

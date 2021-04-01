@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Models\User;
 
 class UserApproval extends Model
 {   
@@ -31,9 +32,9 @@ class UserApproval extends Model
     */
     public function changeColor()
     {       
-        $data = DB::table('companies')
-        ->select('approval')
-        ->first();
+    //     $data = DB::table('companies')
+    //     ->select('approval')
+    //     ->get();
         
     // foreach ($data as $datas)
     //     {
@@ -56,6 +57,12 @@ class UserApproval extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function user(){
+        return $this->belongsTo(User::class,'id','company_id');
+    }
+
+
+
 
     /*
     |--------------------------------------------------------------------------

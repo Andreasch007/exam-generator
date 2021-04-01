@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
+use App\Models\Exam;
 
-class Company extends Model
+class JournalExam extends Model
 {
     use CrudTrait;
 
@@ -16,7 +16,7 @@ class Company extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'companies';
+    protected $table = 'task_journal_exams';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -28,7 +28,7 @@ class Company extends Model
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
-    */    
+    */
 
     /*
     |--------------------------------------------------------------------------
@@ -36,6 +36,9 @@ class Company extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function exam(){
+        return $this->belongsTo(Exam::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
