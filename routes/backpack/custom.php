@@ -19,4 +19,5 @@ Route::group([
     Route::crud('answer', 'AnswerCrudController');
     Route::crud('exam', 'ExamCrudController');
     Route::crud('company', 'CompanyCrudController');
+    Route::crud('UserApproval', 'UserApprovalController');
 }); // this should be the absolute last line of this file

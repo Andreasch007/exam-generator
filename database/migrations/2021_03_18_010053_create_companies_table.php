@@ -17,6 +17,8 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('name');
             $table->timestamps();
+            $table->string('company');
+            $table->enum('approval',['Need Approval','Approved']);
         });
     }
 
