@@ -35,7 +35,7 @@ class ExamCrudController extends CrudController
         $this->crud->enableExportButtons();
                         
         $user = Auth::user();
-        $this->crud->addClause('where', 'user_id', '=', $user->id);
+        $this->crud->addClause('where', 'company_id', '=', $user->company_id);
     }
 
     /**
@@ -133,7 +133,7 @@ class ExamCrudController extends CrudController
                     'question_desc2'  => 'Description2',
                     'question_type'    => 'Type'
                 ],
-                'max' => 4, // maximum rows allowed in the table
+                'max' => 10, // maximum rows allowed in the table
                 'min' => 0, // minimum rows allowed in the table
             ],
         ]);
@@ -162,6 +162,7 @@ class ExamCrudController extends CrudController
         $exam->category_id = $input['category_id'];
         $exam->exam_name = $input['exam_name'];
         $exam->user_id = $user->id;
+        $exam->company_id = $user->company_id;
         $exam->save();
 
         if($option!=''){

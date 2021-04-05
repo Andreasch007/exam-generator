@@ -30,7 +30,8 @@ class UserApprovalController extends CrudController
     {
         CRUD::setModel(\App\Models\UserApproval::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/UserApproval');
-        CRUD::setEntityNameStrings('UserApproval', 'companies');
+        CRUD::setEntityNameStrings('UserApproval', 'User Approval');
+        CRUD::denyAccess('create');
     }
 
     /**
@@ -42,15 +43,21 @@ class UserApprovalController extends CrudController
     protected function setupListOperation()
     {
         // CRUD::setFromDb(); // columns
+        // CRUD::setFromDb(); // columns
         CRUD::addColumns([
             [
-               'label' => 'ID',
-               'name'  => 'id',
+               'label' => 'User',
+               'name'  => 'user_id',
+               'entity'   =>  'user',
+               'attribute'=>  'name',
+               'model' => 'App\Models\User',
+               'type'  => 'select',
                'limit' => 150,
             ],
             [
                 'label' => 'Company',
                 'name'  => 'name',
+                'type'  =>  'text',
                 'limit' => 150,
             ],
             [
@@ -62,7 +69,6 @@ class UserApprovalController extends CrudController
             ],  
 
         ]);
-
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
@@ -83,27 +89,38 @@ class UserApprovalController extends CrudController
         // CRUD::setFromDb(); // fields
         CRUD::addFields([
             
-             [
-                'label' =>  'ID',
-                'name'  =>  'id',
-                'type'  =>  'hidden'
-             ],
-             [
-                'label' => 'Company',
-                'name'  => 'name',
-                'limit' => 150,
-            ],
             [
-                'label' => 'Approval',
-                'name'  => 'approval',
-                'type' => 'enum',
-                'option' => [
-                    'Need Approval' => "Need Approval",
-                    'Approved' => "Approved"
+                'label' => 'User',
+                'name'  => 'user_id',
+                'entity'   =>  'user',
+                'attribute'=>  'name',
+                'model' => 'App\Models\User',
+                'type'  => 'select',
+                'attributes' => [
+                    'readonly'  =>  'readonly'
                 ],
-                'default' => 'Need Approval'
-             ]
-        ]);
+                'limit' => 150,
+             ],
+            [
+               'label' => 'Company',
+               'name'  => 'name',
+               'type'  =>  'text',
+               'attributes' => [
+                'readonly'  =>  'readonly'
+            ],
+               'limit' => 150,
+           ],
+           [
+               'label' => 'Approval',
+               'name'  => 'approval',
+               'type' => 'enum',
+               'option' => [
+                   'Need Approval' => "Need Approval",
+                   'Approved' => "Approved"
+               ],
+               'default' => 'Need Approval'
+            ]
+       ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -122,4 +139,5 @@ class UserApprovalController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
 }

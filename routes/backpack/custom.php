@@ -20,4 +20,9 @@ Route::group([
     Route::crud('exam', 'ExamCrudController');
     Route::crud('company', 'CompanyCrudController');
     Route::crud('UserApproval', 'UserApprovalController');
+    Route::crud('taskheader', 'TaskHeaderCrudController');
+    Route::crud('taskdetail', 'TaskDetailCrudController');
+    Route::crud('journalexam', 'JournalExamCrudController');
+    Route::POST('generate/{id}','TaskHeaderCrudController@generateTransaction');
+
 }); // this should be the absolute last line of this file

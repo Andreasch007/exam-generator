@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\TaskDetailRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Company;
-use App\Models\User;
 
 /**
- * Class CompanyCrudController
+ * Class TaskDetailCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class CompanyCrudController extends CrudController
+class TaskDetailCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    // use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
@@ -29,11 +26,9 @@ class CompanyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Company::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/company');
-        CRUD::setEntityNameStrings('company', 'companies');
-        $user = Auth::user();
-        $this->crud->addClause('where', 'id', '=', $user->company_id);
+        CRUD::setModel(\App\Models\TaskDetail::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/taskdetail');
+        CRUD::setEntityNameStrings('taskdetail', 'task_details');
     }
 
     /**
@@ -44,22 +39,13 @@ class CompanyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // CRUD::setFromDb(); // columns
+        CRUD::setFromDb(); // columns
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
-        CRUD::addColumns(
-            [
-                [
-                    'label'=> 'Company Name',
-                    'name' => 'name', 
-                    'type' => 'text'
-                ],
-            ]
-        );
     }
 
     /**
@@ -70,27 +56,15 @@ class CompanyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(CompanyRequest::class);
-        $user = Auth::user();
-        // CRUD::setFromDb(); // fields
+        CRUD::setValidation(TaskDetailRequest::class);
+
+        CRUD::setFromDb(); // fields
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
-        CRUD::addFields([
-            [
-                'label'=> 'Company Name',
-                'name' => 'name', 
-                'type' => 'text'
-            ],
-            [
-                'name' => 'user_id',
-                'value'=> $user->id,
-                'type' =>'hidden'
-            ]
-        ]);
     }
 
     /**
@@ -103,23 +77,4 @@ class CompanyCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
-
-    public function store(CompanyRequest $request)
-    {
-        $user = Auth::user();
-        $input = $request->all();
-
-        $company = new Company();
-        $company->name = $input['name'];
-        $company->user_id = $user->id;
-        $company->save();
-
-        $userupdate = User::where('id','=',$user->id)
-        ->update([
-            'company_id'    =>  $company->id,
-            'approved'      => 1
-        ]);
- 
-        return redirect('admin/company');
-    }   
 }

@@ -26,7 +26,10 @@ class AnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'answer_no' => 'required',
+            'answer_desc1' => 'required',
+            'answer_desc2' => 'required',
+            'answer_val'   => 'required'
         ];
     }
 

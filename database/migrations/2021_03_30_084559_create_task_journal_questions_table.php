@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExamsTable extends Migration
+class CreateTaskJournalQuestionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('task_journal_questions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('category_id')->unsigned();
-            $table->integer('user_id');
-            $table->integer('company_id');
-            $table->integer('exam_no');
-            $table->string('exam_name');
+            $table->integer('hdr_id');
+            $table->integer('question_id');
+            $table->integer('idx');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('task_journal_questions');
     }
 }

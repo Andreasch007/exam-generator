@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\JournalExamRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Company;
-use App\Models\User;
-
+use DB;
+use App\Models\Exam;
 /**
- * Class CompanyCrudController
+ * Class JournalExamCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class CompanyCrudController extends CrudController
+class JournalExamCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    // use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
@@ -29,11 +27,12 @@ class CompanyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Company::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/company');
-        CRUD::setEntityNameStrings('company', 'companies');
-        $user = Auth::user();
-        $this->crud->addClause('where', 'id', '=', $user->company_id);
+        CRUD::setModel(\App\Models\JournalExam::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/journalexam');
+        CRUD::setEntityNameStrings('journalexam', 'Journal');
+        CRUD::denyAccess('create');
+        CRUD::denyAccess('delete');
+        CRUD::denyAccess('update');
     }
 
     /**
@@ -51,15 +50,27 @@ class CompanyCrudController extends CrudController
          * - CRUD::column('price')->type('number');
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
-        CRUD::addColumns(
-            [
-                [
-                    'label'=> 'Company Name',
-                    'name' => 'name', 
-                    'type' => 'text'
-                ],
-            ]
-        );
+
+         CRUD::addColumns([
+             [
+                 'label'    =>  'Exam',
+                 'name'     =>  'exam_id',
+                 'entity'   =>  'exam',
+                 'attribute'=>  'exam_name',
+                 'model' => 'App\Models\Exam',
+                 'type'     =>  'select'
+             ],
+             [
+                 'label'    =>  'Date',
+                 'name'     =>  'doc_date',
+                 'type'     =>  'date'
+             ],
+             [
+                 'label'    =>  'Start Time',
+                 'name'     =>  'start_time',
+                 'type'     =>  'time'
+             ]
+         ]);
     }
 
     /**
@@ -70,27 +81,15 @@ class CompanyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(CompanyRequest::class);
-        $user = Auth::user();
-        // CRUD::setFromDb(); // fields
+        CRUD::setValidation(JournalExamRequest::class);
+
+        CRUD::setFromDb(); // fields
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
-        CRUD::addFields([
-            [
-                'label'=> 'Company Name',
-                'name' => 'name', 
-                'type' => 'text'
-            ],
-            [
-                'name' => 'user_id',
-                'value'=> $user->id,
-                'type' =>'hidden'
-            ]
-        ]);
     }
 
     /**
@@ -104,22 +103,9 @@ class CompanyCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
-    public function store(CompanyRequest $request)
-    {
-        $user = Auth::user();
-        $input = $request->all();
-
-        $company = new Company();
-        $company->name = $input['name'];
-        $company->user_id = $user->id;
-        $company->save();
-
-        $userupdate = User::where('id','=',$user->id)
-        ->update([
-            'company_id'    =>  $company->id,
-            'approved'      => 1
-        ]);
- 
-        return redirect('admin/company');
-    }   
+    public function generateTransaction($id){
+        $generate=DB::statement('CALL generate_transaction(?)',[$id]);
+        \Alert::add('success', 'You have successfully logged in')->flash();
+        return redirect('admin/journalexam');
+    }
 }
