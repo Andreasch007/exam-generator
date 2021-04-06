@@ -65,7 +65,8 @@ class UserApprovalController extends CrudController
                 'name'  => 'approval',
                 'type' => 'model_function',
                 'function_name' => 'changeColor',
-                'limit' => 150
+                'limit' => 150,
+                'default' => 'Need Approval'
             ],  
 
         ]);

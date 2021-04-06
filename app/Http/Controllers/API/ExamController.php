@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Models\Exam;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
@@ -25,6 +26,27 @@ class ExamController extends BaseController
             }
 
             return $this->sendResponse($category, 'Success');
+        } 
+        else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
+
+    public function getProfile(Request $request){
+        if(isset($_POST['email'])){ 
+            $user = Auth::user();
+            $email = $_POST['email'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'))
+                    ->where('email',$email)
+                    ->first();
+            if($query->totalemail>=1){
+                $user = User::select('users.*')
+                ->where('email',$email)
+                ->first();
+            }
+
+            return $this->sendResponse($user, 'Success');
         } 
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);

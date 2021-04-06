@@ -23,3 +23,4 @@ Route::post('login', 'App\Http\Controllers\API\RegisterController@login');
 Route::post('category', 'App\Http\Controllers\API\ExamController@getCategory');
 Route::post('exam','App\Http\Controllers\API\ExamController@getExam');
 Route::post('questionanswer','App\Http\Controllers\API\ExamController@getQuestion');
+Route::post('getprofile','App\Http\Controllers\API\ExamController@getProfile');
