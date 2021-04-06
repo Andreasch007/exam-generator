@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserApprovalRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class TagCrudController
@@ -28,10 +29,12 @@ class UserApprovalController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\UserApproval::class);
+        CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/UserApproval');
         CRUD::setEntityNameStrings('UserApproval', 'User Approval');
         CRUD::denyAccess('create');
+        $user = Auth::user();
+        $this->crud->addClause('where', 'company_id', '=', $user->company_id);
     }
 
     /**
@@ -47,17 +50,20 @@ class UserApprovalController extends CrudController
         CRUD::addColumns([
             [
                'label' => 'User',
-               'name'  => 'user_id',
-               'entity'   =>  'user',
-               'attribute'=>  'name',
-               'model' => 'App\Models\User',
-               'type'  => 'select',
+               'name'  => 'name',
+            //    'entity'   =>  'user',
+            //    'attribute'=>  'name',
+            //    'model' => 'App\Models\User',
+               'type'  => 'text',
                'limit' => 150,
             ],
             [
                 'label' => 'Company',
-                'name'  => 'name',
-                'type'  =>  'text',
+                'name'  => 'company_id',
+                'entity'   =>  'company',
+                'attribute'=>  'name',
+                'model' => 'App\Models\Company',
+                'type'  =>  'select',
                 'limit' => 150,
             ],
             [
@@ -91,26 +97,26 @@ class UserApprovalController extends CrudController
             
             [
                 'label' => 'User',
-                'name'  => 'user_id',
-                'entity'   =>  'user',
-                'attribute'=>  'name',
-                'model' => 'App\Models\User',
-                'type'  => 'select',
+                'name'  => 'name',
+                'type'  => 'text',
                 'attributes' => [
                     'readonly'  =>  'readonly'
                 ],
                 'limit' => 150,
-             ],
+            ],
             [
                'label' => 'Company',
-               'name'  => 'name',
-               'type'  =>  'text',
+               'name'  => 'company_id',
+               'type'  =>  'select',
+               'entity'   =>  'company',
+               'attribute'=>  'name',
+               'model' => 'App\Models\Company',
                'attributes' => [
                 'readonly'  =>  'readonly'
             ],
                'limit' => 150,
-           ],
-           [
+            ],
+            [
                'label' => 'Approval',
                'name'  => 'approval',
                'type' => 'enum',

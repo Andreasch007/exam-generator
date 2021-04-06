@@ -24,14 +24,14 @@ class DatabaseSeeder extends Seeder
             'email'         => 'tjhinandreasch007@gmail.com',
             'password'      => bcrypt('12345678'),
             'created_at'    => date("Y-m-d H:i:s"),
-            'approved'      => '0'
+            'approval'  => 'Approved'
         ]);
         $user->assignRole('Super Admin');
 
         $company = Company::create([
             'name'      =>  'CV. Metamorphz',
-            'user_id'   => $user->id,
-            'approved'  => 1,
+            'user_id'   => $user->id
+
         ]);
 
         $user = User::where('id','=',$user->id)

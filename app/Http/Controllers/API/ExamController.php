@@ -13,7 +13,7 @@ class ExamController extends BaseController
 {
     //
     public function getCategory(Request $request){
-        if(isset($_POST['email'])){ 
+        if(isset($_POST['email']) && isset($_POST['company_id'])){ 
             $user = Auth::user();
             $email = $_POST['email'];
             $query = DB::table('users')
@@ -21,7 +21,13 @@ class ExamController extends BaseController
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $category = Category::all();
+                $category = DB::table('categories')
+                            ->join('exams','categories.id','=','exams.category_id')
+                            ->join('companies','exams.company_id','=','companies.id')
+                            ->join('users','companies.id','=','users.company_id')
+                            ->select('categories.*')
+                            ->where('users.id',$user->id)
+                            ->get();
             }
 
             return $this->sendResponse($category, 'Success');
@@ -62,14 +68,30 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $exam = DB::table('questions')
-                        ->leftjoin('answers','answers.question_id','=','questions.id')
-                        ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id',
-                        'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
+                        // ->join('answers','answers.question_id','=','questions.id')
+                        ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id')
+                        // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
                         ->get();
-                        // dd($exam);
+
+                $response = [];
+                foreach($exam as $exams){
+
+                    $answer = DB::table('answers')
+                              ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
+                              ->where('answers.question_id','=',$exams->question_id)
+                              ->get();
+                    $response[] = [
+                        'question_id'=>$exams->question_id,
+                        'question_desc1'=>$exams->question_desc1,
+                        'question_desc2'=>$exams->question_desc2,
+                        'question_type'=>$exams->question_type,
+                        '$answer'=>$answer
+                    ];
+                    
+                }
             }
-            return $this->sendResponse($exam, 'Success');
+            return json_encode($response,200);
         }else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
