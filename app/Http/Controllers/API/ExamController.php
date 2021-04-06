@@ -14,7 +14,7 @@ class ExamController extends BaseController
 {
     //
     public function getCategory(Request $request){
-        if(isset($_POST['email']) && isset($_POST['company_id'])){ 
+        if(isset($_POST['email'])){ 
             $user = Auth::user();
             $email = $_POST['email'];
             $query = DB::table('users')
