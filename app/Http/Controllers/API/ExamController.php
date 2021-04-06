@@ -28,7 +28,7 @@ class ExamController extends BaseController
                             ->join('companies','exams.company_id','=','companies.id')
                             ->join('users','companies.id','=','users.company_id')
                             ->select('categories.*')
-                            ->where('users.id',$user->id)
+                            ->where('users.email','=',$email)
                             ->get();
             }
 
