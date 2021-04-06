@@ -29,27 +29,17 @@ class UserApproval extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function changeColor()
-    {       
-        $data = DB::table('companies')
-        ->select('approval')
-        ->first();
-        
-            if($this->approval == 'Approved')
-            {
-                return "<span class='badge' style='background-color:green'>".$this->approval."</span>";
-            }
-            else 
-            {
-                return "<span class='badge' style='background-color:orange'>".$this->approval."</span>";
-            }
-        
-    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+
+
 
     /*
     |--------------------------------------------------------------------------

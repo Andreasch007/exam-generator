@@ -20,7 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->boolean('approved')->default(0);
             $table->timestamps();
             $table->string('company');
-            $table->enum('approval',['Need Approval','Approved']);
+            // $table->enum('approval',['Need Approval','Approved']);
         });
     }
 

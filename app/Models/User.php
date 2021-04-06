@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'approval'
     ];
 
     /**
@@ -44,5 +45,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function changeColor()
+    {       
+    //     $data = DB::table('companies')
+    //     ->select('approval')
+    //     ->get();
+        
+    // foreach ($data as $datas)
+    //     {
+            if($this->approval == 'Approved')
+            {
+                return "<span class='badge' style='background-color:green'>".$this->approval."</span>";
+            }
+            else 
+            {
+                return "<span class='badge' style='background-color:orange'>".$this->approval."</span>";
+            }
+        // echo $data;
+
+        
+         //return '<span style="color:red">'.$this->approval.'<span>'>'.';
+        // }
+    }
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
+
 
 }
