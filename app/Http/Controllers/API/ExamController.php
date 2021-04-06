@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Exam;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
@@ -68,9 +69,7 @@ class ExamController extends BaseController
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $user = User::select('users.*')
-                ->where('email',$email)
-                ->first();
+                $user = Company::all();
             }
 
             return $this->sendResponse($user, 'Success');
