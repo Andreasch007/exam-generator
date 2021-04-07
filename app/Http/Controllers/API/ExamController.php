@@ -95,6 +95,7 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->select('categories.*','exams.*','task_journal_exams.doc_date','task_journal_exams.start_time')
                         ->where('users.email','=',$email)
+                        ->orderBy('task_journal_exams.doc_date')
                         ->get();
             }
             return $this->sendResponse($exam, 'Success');
@@ -133,7 +134,7 @@ class ExamController extends BaseController
                         'question_desc1'=>$exams->question_desc1,
                         'question_desc2'=>$exams->question_desc2,
                         'question_type'=>$exams->question_type,
-                        '$answer'=>$answer
+                        'answer'=>$answer
                     ];
                     
                 }
