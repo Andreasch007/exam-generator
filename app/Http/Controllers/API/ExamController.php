@@ -90,10 +90,10 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
                 
                 $exam = DB::table('exams')
-                        ->join('companies','exams.company_id','=','companies.id')
-                        ->join('users','companies.id','=','users.company_id')
+                        ->join('task_journal_exams','exams.id','task_journal_exams.exam_id')
+                        ->join('users','task_journal_exams.user_id','=','users.id')
                         ->join('categories','exams.category_id','categories.id')
-                        ->select('categories.*','exams.*')
+                        ->select('categories.*','exams.*','task_journal_exams.doc_date','task_journal_exams.start_time')
                         ->where('users.email','=',$email)
                         ->get();
             }
