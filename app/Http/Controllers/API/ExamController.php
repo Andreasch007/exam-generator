@@ -80,17 +80,22 @@ class ExamController extends BaseController
     }
 
     public function getExam(Request $request){
-        if(isset($_POST['email']) && isset($_POST['category_id'])){
+        if(isset($_POST['email'])){
             $user = Auth::user();
             $email = $_POST['email'];
-            $category_id=$_POST['category_id'];
             $query = DB::table('users')
                     ->select(DB::raw('COUNT(users.id) as totalemail'))
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $exam = Exam::All()
-                        ->where('category_id','=',$category_id);
+                
+                $exam = DB::table('exams')
+                        ->join('companies','exams.company_id','=','companies.id')
+                        ->join('users','companies.id','=','users.company_id')
+                        ->join('categories','exams.category_id','categories.id')
+                        ->select('categories.*','exams.*')
+                        ->where('users.email','=',$email)
+                        ->get();
             }
             return $this->sendResponse($exam, 'Success');
         }else{ 
