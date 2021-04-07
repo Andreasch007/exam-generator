@@ -126,7 +126,7 @@ class ExamController extends BaseController
                 foreach($exam as $exams){
 
                     $answer = DB::table('answers')
-                              ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
+                              ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val','answers.answer_no')
                               ->where('answers.question_id','=',$exams->question_id)
                               ->get();
                     $response[] = [
