@@ -152,7 +152,7 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            $answer_id=$_POST['answer_id'];
+            $answer=json_encode($_POST['answer']['answer_id']);
             $result=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
@@ -166,7 +166,7 @@ class ExamController extends BaseController
                           ->where('users.email',$email)
                           ->where('task_journal_exams.exam_id',$exam_id)
                           ->where('task_journal_questions.question_id',$question_id)
-                          ->where('task_journal_answers.answer_id',$answer_id)
+                          ->where('task_journal_answers.answer_id',$answer)
                           ->update([
                               'result'=>$result
                           ]);
