@@ -170,7 +170,7 @@ class ExamController extends BaseController
                           ->where('task_journal_answers.answer_id',$data)
                           ->get();
 
-                // echo $data;
+                echo $update;
                 // var_dump($data);
                 }            
             }
