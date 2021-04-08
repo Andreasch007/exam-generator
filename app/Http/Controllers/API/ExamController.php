@@ -148,7 +148,7 @@ class ExamController extends BaseController
     }
 
     public function updateResultJournal(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id']) && isset($_POST['answer_id']) && isset($_POST['result'])){
+        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id'])){
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
