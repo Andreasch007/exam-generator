@@ -152,14 +152,14 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            $answer=json_decode(json_encode($_POST['answer']));
+            $answer=json_encode($_POST['answer']);
             $result=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
             ->first();
             if($query->totalemail>=1){
-                foreach($answer as $data){
+                // foreach($answer as $data){
                 // $update = DB::table('task_journal_answers')
                 //           ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                 //           ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
@@ -171,12 +171,12 @@ class ExamController extends BaseController
                 //           ->update([
                 //               'result'=>$result
                 //           ]);
-                $test = $data;
-                }            
+                // $test = $data;
+                // }            
             }
         
             // return $this->sendResponse($update, 'Success');
-            return $test;
+            return $answer;
         }else{ 
         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
