@@ -184,7 +184,7 @@ class ExamController extends BaseController
                     ->where('users.email',$email)
                     ->where('task_journal_exams.exam_id',$exam_id)
                     ->where('task_journal_questions.question_id',$question_id)
-                    ->where('task_journal_answers.answer_id',$answer)
+                    ->where('task_journal_answers.answer_id',$answers)
                     ->update([
                         'result'=>$result
                     ]);
