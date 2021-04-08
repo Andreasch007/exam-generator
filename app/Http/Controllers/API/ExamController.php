@@ -159,6 +159,7 @@ class ExamController extends BaseController
             ->where('email',$email)
             ->first();
             if($query->totalemail>=1){
+                foreach($answer as $data){
                 $update = DB::table('task_journal_answers')
                           ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                           ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
@@ -166,10 +167,11 @@ class ExamController extends BaseController
                           ->where('users.email',$email)
                           ->where('task_journal_exams.exam_id',$exam_id)
                           ->where('task_journal_questions.question_id',$question_id)
-                          ->where('task_journal_answers.answer_id',$answer)
+                          ->where('task_journal_answers.answer_id',$data->answer_id)
                           ->update([
                               'result'=>$result
                           ]);
+                }            
             }
         
             return $this->sendResponse($update, 'Success');
