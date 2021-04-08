@@ -117,7 +117,7 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
                 $exam = DB::table('questions')
                         // ->join('answers','answers.question_id','=','questions.id')
-                        ->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id')
+                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id')
                         // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
                         ->get();
@@ -131,6 +131,7 @@ class ExamController extends BaseController
                               ->get();
                     $response[] = [
                         'question_id'=>$exams->question_id,
+                        'exam_id'   => $exams->exam_id,
                         'question_desc1'=>$exams->question_desc1,
                         'question_desc2'=>$exams->question_desc2,
                         'question_type'=>$exams->question_type,
