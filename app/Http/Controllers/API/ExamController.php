@@ -159,7 +159,7 @@ class ExamController extends BaseController
             ->where('email',$email)
             ->first();
             if($query->totalemail>=1){
-                foreach($answer as $data){
+                // foreach($answer as $data){
                 // $update = DB::table('task_journal_answers')
                 //           ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                 //           ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
@@ -171,12 +171,12 @@ class ExamController extends BaseController
                 //           ->update([
                 //               'result'=>$result
                 //           ]);
-                $test = $data->answer_id;
-                }            
+                // $test = $data->answer_id;
+                // }            
             }
         
             // return $this->sendResponse($test, 'Success');
-            return $test;
+            return $answer;
         }else{ 
         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
