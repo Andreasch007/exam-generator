@@ -176,7 +176,7 @@ class ExamController extends BaseController
             }
         
             // return $this->sendResponse($update, 'Success');
-            return $test;
+            echo $test;
         }else{ 
         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
