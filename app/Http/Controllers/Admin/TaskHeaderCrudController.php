@@ -39,9 +39,10 @@ class TaskHeaderCrudController extends CrudController
     }
 
     public function generateTransaction($id){
-        $generate=DB::statement('CALL generate_transaction(?)',[$id]);
+       return dd($id);
+        // $generate=DB::statement('CALL generate_transaction(?)',[$id]);
 
-        return $generate;
+        // return $generate;
     }
 
     /**
