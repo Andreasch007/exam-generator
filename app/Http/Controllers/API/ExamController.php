@@ -148,12 +148,12 @@ class ExamController extends BaseController
     }
 
     public function updateResultJournal(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id']) && isset($_POST['answer_id'])){
+        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id']) && isset($_POST['answer_id']) && isset($_POST['result'])){
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
             $answer_id=$_POST['answer_id'];
-            // $result=$_POST['result'];
+            $result=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
@@ -167,12 +167,12 @@ class ExamController extends BaseController
                           ->where('task_journal_exams.exam_id',$exam_id)
                           ->where('task_journal_questions.question_id',$question_id)
                           ->where('task_journal_answers.answer_id',$answer_id)
-                          ->get();
-            } 
-            return json_encode($update,200);
-        }else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+                          ->update([
+                              'result'=>$result
+                          ]);
+            }
         } 
+            return $update;
     }
     
 }
