@@ -152,26 +152,27 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            $answer=$_POST['answer'];
-            $result=$_POST['result'];
+            $answers=$_POST['answer'];
+            $results=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
             ->first();
             if($query->totalemail>=1){
-                foreach($answer as $data){
-                $update = DB::table('task_journal_answers')
-                          ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
-                          ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
-                          ->join('users','task_journal_exams.user_id','=','users.id')
-                          ->where('users.email',$email)
-                          ->where('task_journal_exams.exam_id',$exam_id)
-                          ->where('task_journal_questions.question_id',$question_id)
-                          ->where('task_journal_answers.answer_id',$data)
-                          ->update([
-                              'result'=>$result
-                          ]);
-                          
+                foreach($answers as $data){
+                    foreach($results as $result){
+                        $update = DB::table('task_journal_answers')
+                        ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
+                        ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                        ->join('users','task_journal_exams.user_id','=','users.id')
+                        ->where('users.email',$email)
+                        ->where('task_journal_exams.exam_id',$exam_id)
+                        ->where('task_journal_questions.question_id',$question_id)
+                        ->where('task_journal_answers.answer_id',$data)
+                        ->update([
+                            'result'=>$result
+                        ]);
+                    }
                 }            
             }
             return $this->sendResponse($update, 'Success');
