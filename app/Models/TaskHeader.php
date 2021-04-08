@@ -32,17 +32,30 @@ class TaskHeader extends Model
     public function buttonGenerate($crud = false)
     {
         // return '<a class="btn btn-sm btn-link" href="http://google.com?q='.urlencode($this->text).'" data-toggle="tooltip" title="Just a demo custom button."><i class="las la-search"></i> Google it</a>';
-        return '<a class="btn btn-sm btn-warning" id="btn-gen" type="button">Generate Task</a>
+        return '<button class="btn btn-sm btn-warning" id="btn-gen" onclick=generateTask('.$this->id.') type="button">Generate Task</button>
         <script>
-        $("#btn-gen").click(function() {
-            $.ajax({
-                type: "POST",
-                url: "https://exam.graylite.com/admin/generate/'.$this->id.'",
-                dataType: "json",
-            }).done(function(){
-                alert("Success Generate");
-            }); 
-        });
+        window.generateTask=function(ele){
+            var retVal = confirm("Are you sure you want to generate ?");
+            if( retVal == true ){
+                var row = $(ele).closest("tr");
+                console.log(row);
+                console.log(ele);
+                $.ajax({
+                        type: "POST",
+                        url: "https://exam.graylite.com/admin/generate/"+ele,
+                        // url: "http://localhost/exam-generator/public/admin/generate/"+ele,
+                        dataType: "json",
+                    }).done(function(){
+                        alert("Success Generate");
+                    }); 
+            }
+            else{
+                alert ("Generate Canceled!");
+            }
+        }
+        // $("#btn-gen").click(function() {
+           
+        // });
         </script>';
     }
 
