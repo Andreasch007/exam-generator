@@ -152,7 +152,7 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            $answer=json_encode($_POST['answer']);
+            $answer=$_POST['answer'];
             $result=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
