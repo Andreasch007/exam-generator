@@ -167,15 +167,13 @@ class ExamController extends BaseController
                           ->where('users.email',$email)
                           ->where('task_journal_exams.exam_id',$exam_id)
                           ->where('task_journal_questions.question_id',$question_id)
-                          ->where('task_journal_answers.answer_id',$data)
-                          ->get();
-
-                echo $update;
-                // var_dump($data);
+                          ->where('task_journal_answers.answer_id',$answer)
+                          ->update([
+                              'result'=>$result
+                          ]);
                 }            
             }
-        
-            
+            return 1;
         }else{ 
         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
