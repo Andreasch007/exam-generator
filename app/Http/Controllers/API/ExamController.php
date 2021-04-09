@@ -152,16 +152,15 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            // $question_type=$_POST['question_type'];
+            $question_type=$_POST['question_type'];
             $answers=$_POST['answer'];
-            // $answerOther=$_POST['answerOther'];
             $results=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
             ->first();
             if($query->totalemail>=1){
-                // if($question_type=='check'){
+                if($question_type=='check'){
                     foreach($answers as $data){
                         foreach($results as $result){
                             $update = DB::table('task_journal_answers')
@@ -177,32 +176,19 @@ class ExamController extends BaseController
                             ]);
                         }
                     }
-                // }
-                // else if ($question_type=='radio'){
-                //     $update = DB::table('task_journal_answers')
-                //     ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
-                //     ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
-                //     ->join('users','task_journal_exams.user_id','=','users.id')
-                //     ->where('users.email',$email)
-                //     ->where('task_journal_exams.exam_id',$exam_id)
-                //     ->where('task_journal_questions.question_id',$question_id)
-                //     ->where('task_journal_answers.answer_id',$answers)
-                //     ->update([
-                //         'result'=>true
-                //     ]);
-                // }else if ($question_type=='text'){
-                //     $update = DB::table('task_journal_answers')
-                //     ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
-                //     ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
-                //     ->join('users','task_journal_exams.user_id','=','users.id')
-                //     ->where('users.email',$email)
-                //     ->where('task_journal_exams.exam_id',$exam_id)
-                //     ->where('task_journal_questions.question_id',$question_id)
-                //     ->where('task_journal_answers.answer_id',$answers)
-                //     ->update([
-                //         'result'=>$results
-                //     ]);
-                // }                        
+                }else {
+                    $update = DB::table('task_journal_answers')
+                    ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
+                    ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                    ->join('users','task_journal_exams.user_id','=','users.id')
+                    ->where('users.email',$email)
+                    ->where('task_journal_exams.exam_id',$exam_id)
+                    ->where('task_journal_questions.question_id',$question_id)
+                    ->where('task_journal_answers.answer_id',$answers)
+                    ->update([
+                        'result'=>$results
+                    ]);
+                }            
             }
             
             return $this->sendResponse($update, 'Success');
