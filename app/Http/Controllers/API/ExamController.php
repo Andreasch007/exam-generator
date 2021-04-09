@@ -176,7 +176,20 @@ class ExamController extends BaseController
                             ]);
                         }
                     }
-                }else {
+                }else if ($question_type=='radio'){
+                    $update = DB::table('task_journal_answers')
+                    ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
+                    ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                    ->join('users','task_journal_exams.user_id','=','users.id')
+                    ->where('users.email',$email)
+                    ->where('task_journal_exams.exam_id',$exam_id)
+                    ->where('task_journal_questions.question_id',$question_id)
+                    ->where('task_journal_answers.answer_id',$answers)
+                    ->update([
+                        'result'=>$results
+                    ]);
+                }        
+                else if ($question_type=='text'){
                     $update = DB::table('task_journal_answers')
                     ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                     ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
