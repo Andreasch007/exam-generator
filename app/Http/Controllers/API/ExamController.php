@@ -154,6 +154,7 @@ class ExamController extends BaseController
             $question_id=$_POST['question_id'];
             $question_type=$_POST['question_type'];
             $answers=$_POST['answer'];
+            $answerOther=$_POST['answerOther'];
             $results=$_POST['result'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
