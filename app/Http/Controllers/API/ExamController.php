@@ -152,7 +152,7 @@ class ExamController extends BaseController
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
-            $question_type=$_POST['question_type'];
+            // $question_type=$_POST['question_type'];
             $answers=$_POST['answer'];
             // $answerOther=$_POST['answerOther'];
             $results=$_POST['result'];
