@@ -153,7 +153,7 @@ class ExamCrudController extends CrudController
                     ],
                     [
                         'name'     => 'question_desc1',
-                        'label' => 'Question Desc1',
+                        'label' => 'Q. Desc1',
                         'type'=> 'text',
                         // 'model'     => "App\Models\User",
                         // 'attribute' =>  'name',
@@ -163,7 +163,7 @@ class ExamCrudController extends CrudController
                     ],
                     [
                         'name'     => 'question_desc2',
-                        'label' => 'Question Desc2',
+                        'label' => 'Q. Desc2',
                         'type'=> 'text',
                         // 'model'     => "App\Models\User",
                         // 'attribute' =>  'name',
@@ -173,7 +173,7 @@ class ExamCrudController extends CrudController
                     ],
                     [
                         'name'     => 'question_type',
-                        'label' => 'Question Type',
+                        'label' => 'Q. Type',
                         'type'=> 'select_from_array',
                         'options' => [
                             'text'  => 'text',
