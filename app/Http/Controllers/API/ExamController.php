@@ -116,18 +116,25 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $exam = DB::table('questions')
+                        ->join('task_journal_questions','questions.id','task_journal_questions.question_id')
                         // ->join('answers','answers.question_id','=','questions.id')
+                        ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                        ->join('users','task_journal_exams.user_id','=','users.id')
                         ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id')
                         // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
+                        ->where('users.email',$email)
+                        ->orderBy('task_journal_questions.idx')
                         ->get();
 
                 $response = [];
                 foreach($exam as $exams){
 
                     $answer = DB::table('answers')
+                              ->join('task_journal_answers','answers.id','task_journal_answers.answer_id')
                               ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val','answers.answer_no')
                               ->where('answers.question_id','=',$exams->question_id)
+                              ->orderBy('task_journal_answers.idx')
                               ->get();
                     $response[] = [
                         'question_id'=>$exams->question_id,
