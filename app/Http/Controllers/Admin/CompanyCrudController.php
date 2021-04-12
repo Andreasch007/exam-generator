@@ -120,6 +120,6 @@ class CompanyCrudController extends CrudController
             'approved'      => 1
         ]);
  
-        return redirect('admin/company');
+        return redirect('company');
     }   
 }

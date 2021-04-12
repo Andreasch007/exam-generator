@@ -177,7 +177,7 @@ class TaskHeaderCrudController extends CrudController
             }
         }
  
-        return redirect('admin/taskheader');
+        return redirect('taskheader');
     }   
 
     public function update(taskHeaderRequest $request,  $id)
@@ -202,7 +202,7 @@ class TaskHeaderCrudController extends CrudController
                 $taskdetail->save();
             }
         }
-        return redirect('admin/taskheader');
+        return redirect('taskheader');
     }
 
     public function edit($id)

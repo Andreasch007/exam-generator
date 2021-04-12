@@ -32,6 +32,7 @@ class QuestionCrudController extends CrudController
         CRUD::setModel(\App\Models\Question::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/question');
         CRUD::setEntityNameStrings('question', 'questions');
+        $this->crud->orderBy('question_no', 'ASC');
     }
 
     /**
@@ -52,9 +53,17 @@ class QuestionCrudController extends CrudController
 
          CRUD::addColumns([
              [
+                'label' =>  'Exam',
+                'name'  =>  'exam_id',
+                'type'  =>  'select',
+                'entity' => 'exam',
+                'attribute' => 'exam_name',
+                'model' => 'App\Models\Exam',
+             ],
+             [
                 'label' =>  'No',
                 'name'  =>  'question_no',
-                'type'  =>  'number'
+                'type'  =>  'number',
              ],
              [
                 'label' =>  'Desc1',
@@ -206,7 +215,7 @@ class QuestionCrudController extends CrudController
             }
         }
  
-        return redirect('admin/question');
+        return redirect('question');
     }   
 
     public function update(QuestionRequest $request,  $id)
@@ -248,7 +257,7 @@ class QuestionCrudController extends CrudController
         // $answer->answer_val = $answer_val;
         // $answer->question_id = $question->id;
         // $answer->save();/
-        return redirect('admin/question');
+        return redirect('question');
     }
 
     public function edit($id)

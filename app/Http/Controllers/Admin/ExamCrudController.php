@@ -121,20 +121,77 @@ class ExamCrudController extends CrudController
                         return $query->orderBy('category_name', 'ASC')->get();
                     }), // force the related options to be a custom query, instead of all(); you can use this to filter the results show in the select
             ],
-            [   // Table
+            // [   // Table
+            //     'name'            => 'questions',
+            //     'label'           => 'Question',
+            //     'type'            => 'table',
+            //     'entity_singular' => 'question', // used on the "Add X" button
+            //     // 'model'           => "App\Models\Question",
+            //     'columns'         => [
+            //         'question_no'     => 'No',
+            //         'question_desc1'  => 'Description1',
+            //         'question_desc2'  => 'Description2',
+            //         'question_type'    => 'Type'
+            //     ],
+            //     'max' => 10, // maximum rows allowed in the table
+            //     'min' => 0, // minimum rows allowed in the table
+            // ],
+            [   
                 'name'            => 'questions',
                 'label'           => 'Question',
-                'type'            => 'table',
-                'entity_singular' => 'question', // used on the "Add X" button
-                // 'model'           => "App\Models\Question",
-                'columns'         => [
-                    'question_no'     => 'No',
-                    'question_desc1'  => 'Description1',
-                    'question_desc2'  => 'Description2',
-                    'question_type'    => 'Type'
+                'type'            => 'repeatable',
+                'fields'         => [
+                    [
+                        'name'     => 'question_no',
+                        'label' => 'No',
+                        'type'=> 'number',
+                        // 'model'     => "App\Models\User",
+                        // 'attribute' =>  'name',
+                        'wrapperAttributes' => [
+                            'class' => 'form-group col-md-2'
+                          ],
+                    ],
+                    [
+                        'name'     => 'question_desc1',
+                        'label' => 'Question Desc1',
+                        'type'=> 'text',
+                        // 'model'     => "App\Models\User",
+                        // 'attribute' =>  'name',
+                        'wrapperAttributes' => [
+                            'class' => 'form-group col-md-4'
+                          ],
+                    ],
+                    [
+                        'name'     => 'question_desc2',
+                        'label' => 'Question Desc2',
+                        'type'=> 'text',
+                        // 'model'     => "App\Models\User",
+                        // 'attribute' =>  'name',
+                        'wrapperAttributes' => [
+                            'class' => 'form-group col-md-4'
+                          ],
+                    ],
+                    [
+                        'name'     => 'question_type',
+                        'label' => 'Question Type',
+                        'type'=> 'select_from_array',
+                        'options' => [
+                            'text'  => 'text',
+                            'check' => 'check',
+                            'radio' => 'radio'
+                        ],
+                        // 'model'     => "App\Models\Question",
+                        // 'attribute' =>  'name',
+                        'wrapperAttributes' => [
+                            'class' => 'form-group col-md-2'
+                          ],
+                    ],
+
+                    
+                    // [
+                    //     ''
+                    // ]
                 ],
-                'max' => 10, // maximum rows allowed in the table
-                'min' => 0, // minimum rows allowed in the table
             ],
         ]);
 
@@ -177,7 +234,7 @@ class ExamCrudController extends CrudController
             }
         }
  
-        return redirect('admin/exam');
+        return redirect('exam');
     }   
 
     public function update(ExamRequest $request,  $id)
@@ -213,7 +270,7 @@ class ExamCrudController extends CrudController
         // $answer->answer_val = $answer_val;
         // $answer->question_id = $question->id;
         // $answer->save();/
-        return redirect('admin/exam');
+        return redirect('/exam');
     }
 
     public function edit($id)

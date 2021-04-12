@@ -106,6 +106,6 @@ class JournalExamCrudController extends CrudController
     public function generateTransaction($id){
         $generate=DB::statement('CALL generate_transaction(?)',[$id]);
         \Alert::add('success', 'You have successfully logged in')->flash();
-        return redirect('admin/journalexam');
+        return redirect('journalexam');
     }
 }

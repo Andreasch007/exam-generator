@@ -42,8 +42,8 @@ class TaskHeader extends Model
                 console.log(ele);
                 $.ajax({
                         type: "POST",
-                        url: "https://exam.graylite.com/admin/generate/"+ele,
-                        // url: "http://localhost/exam-generator/public/admin/generate/"+ele,
+                        url: "https://exam.graylite.com/generate/"+ele,
+                        // url: "http://localhost/exam-generator/public/generate/"+ele,
                         dataType: "json",
                     }).done(function(){
                         alert("Success Generate");
