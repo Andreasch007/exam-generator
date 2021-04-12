@@ -118,7 +118,12 @@ class QuestionCrudController extends CrudController
                 [
                     'label' =>  'Type',
                     'name'  =>  'question_type',
-                    'type'  =>  'text'
+                    'type'=> 'select_from_array',
+                    'options' => [
+                        'text'  => 'text',
+                        'check' => 'check',
+                        'radio' => 'radio'
+                    ],
                 ],
                 [   // Table
                     'name'            => 'answers',
@@ -168,7 +173,12 @@ class QuestionCrudController extends CrudController
                 [
                     'label' =>  'Type',
                     'name'  =>  'question_type',
-                    'type'  =>  'text'
+                    'type'=> 'select_from_array',
+                    'options' => [
+                        'text'  => 'text',
+                        'check' => 'check',
+                        'radio' => 'radio'
+                    ],
                 ],
                 [   // Table
                     'name'            => 'answers',
