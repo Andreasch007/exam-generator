@@ -9,7 +9,15 @@
 @if(backpack_user()->hasRole('Super Admin||Admin'))
 <li class='nav-item'><a class='nav-link' href="{{ backpack_url('company') }}"><i class="nav-icon las la-building"></i> Company</a></li>
 <li class='nav-item'><a class='nav-link' href="{{ backpack_url('journalexam') }}"><i class="nav-icon las la-journal-whills"></i></i> Journal Exams</a></li>
-<li class='nav-item'><a class='nav-link' href="{{ backpack_url('UserApproval') }}"><i class='nav-icon la la-user'></i> User Approval</a></li>
+@php
+$user = Auth::user();
+$nofitication=DB::table('users')->select(DB::raw('COUNT(*) as count'))->where('approval','<>','Approved')->where('company_id',$user->company_id)->get();
+@endphp
+<li class='nav-item'><a class='nav-link' href="{{ backpack_url('UserApproval') }}">
+	<i class='nav-icon la la-user'></i> User Approval
+	<span class="badge" style="position: absolute;padding: 5px 7px;border-radius: 50%;  color: white;right: 30px;background: red;">{{$nofitication[0]->count}}</span>
+</a>
+</li>
 @endif
 @if(backpack_user()->hasRole('Super Admin'))
 <li class="nav-item nav-dropdown">
@@ -21,7 +29,6 @@
 	  
 	</ul>
 </li>
-
 @endif
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('answer') }}'><i class='nav-icon la la-question'></i> Answers</a></li> -->
 

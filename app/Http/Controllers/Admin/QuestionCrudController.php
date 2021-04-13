@@ -6,6 +6,7 @@ use App\Http\Requests\QuestionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\User;
@@ -34,6 +35,11 @@ class QuestionCrudController extends CrudController
         CRUD::setEntityNameStrings('question', 'questions');
         $this->crud->orderBy('exam_id', 'ASC');
         $this->crud->orderBy('question_no', 'ASC');
+        $this->crud->addClause('join', 'exams', function ($query){
+            $user = Auth::user();
+            $query->on('questions.exam_id','exams.id')
+            ->where('exams.company_id',$user->company_id);
+        });
     }
 
     /**

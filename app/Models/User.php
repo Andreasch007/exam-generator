@@ -55,11 +55,11 @@ class User extends Authenticatable
     //     {
             if($this->approval == 'Approved')
             {
-                return "<span class='badge' style='background-color:green'>".$this->approval."</span>";
+                return "<span class='badge' style='background-color:green; color: white;'>".$this->approval."</span>";
             }
             else 
             {
-                return "<span class='badge' style='background-color:orange'>".$this->approval."</span>";
+                return "<span class='badge' style='background-color:orange; color: white;'>".$this->approval."</span>";
             }
         // echo $data;
 

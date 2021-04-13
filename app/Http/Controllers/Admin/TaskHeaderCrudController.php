@@ -36,6 +36,11 @@ class TaskHeaderCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/taskheader');
         CRUD::setEntityNameStrings('task', 'task');
         $this->crud->addButtonFromModelFunction('line', 'generate_task', 'buttonGenerate', 'beginning');
+        $this->crud->addClause('join', 'exams', function ($query){
+            $user = Auth::user();
+            $query->on('task_trans_headers.exam_id','exams.id')
+            ->where('exams.company_id',$user->company_id);
+        });
     }
 
     public function generateTransaction($id){
@@ -133,6 +138,10 @@ class TaskHeaderCrudController extends CrudController
                         'type'=> 'select2',
                         'model'     => "App\Models\User",
                         'attribute' =>  'name',
+                        'options'   => (function ($query) {
+                            $user = Auth::user();
+                            return $query->where('company_id', $user->company_id)->get();
+                        }), 
                         // 'wrapperAttributes' => [
                         //     'class' => 'form-group col-md-8'
                         //   ],

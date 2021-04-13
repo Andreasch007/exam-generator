@@ -7,6 +7,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use DB;
 use App\Models\Exam;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 /**
  * Class JournalExamCrudController
  * @package App\Http\Controllers\Admin
@@ -33,6 +35,11 @@ class JournalExamCrudController extends CrudController
         CRUD::denyAccess('create');
         CRUD::denyAccess('delete');
         CRUD::denyAccess('update');
+        $this->crud->addClause('join', 'exams', function ($query){
+            $user = Auth::user();
+            $query->on('task_journal_exams.exam_id','exams.id')
+            ->where('exams.company_id',$user->company_id);
+        });
     }
 
     /**
