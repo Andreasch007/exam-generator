@@ -12,6 +12,7 @@ use Redirect;
 use App\Models\TaskHeader;
 use App\Models\TaskDetail;
 use Illuminate\Support\Facades\Validator;
+use OneSignal;
 /**
  * Class TaskHeaderCrudController
  * @package App\Http\Controllers\Admin
@@ -36,16 +37,21 @@ class TaskHeaderCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/taskheader');
         CRUD::setEntityNameStrings('task', 'task');
         $this->crud->addButtonFromModelFunction('line', 'generate_task', 'buttonGenerate', 'beginning');
-        $this->crud->addClause('join', 'exams', function ($query){
-            $user = Auth::user();
-            $query->on('task_trans_headers.exam_id','exams.id')
-            ->where('exams.company_id',$user->company_id);
-        });
+        $user = Auth::user();
+        $this->crud->addClause('where', 'company_id', '=', $user->company_id);
     }
 
     public function generateTransaction($id){
         $generate=DB::statement('CALL generate_transaction(?)',[$id]);
-
+        $segment = 'Active Users';
+        $oneSignal = OneSignal::sendNotificationToSegment(
+            "Some Message",
+            $segment,
+            $url = null,
+            $data = null,
+            $buttons = null,
+            $schedule = null
+        );
         return $generate;
     }
 

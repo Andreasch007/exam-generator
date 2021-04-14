@@ -17,6 +17,7 @@ class CreateTaskTransHeadersTable extends Migration
             $table->integer('exam_id')->unsigned();
             $table->date('doc_date');
             $table->time('start_time', $precision = 0);
+            $table->integer('company_id');
             $table->timestamps();
         });
     }
