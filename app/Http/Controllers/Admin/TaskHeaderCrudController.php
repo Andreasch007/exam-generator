@@ -44,14 +44,32 @@ class TaskHeaderCrudController extends CrudController
     public function generateTransaction($id){
         $generate=DB::statement('CALL generate_transaction(?)',[$id]);
         $segment = 'Active Users';
-        $oneSignal = OneSignal::sendNotificationToSegment(
-            "Some Message",
-            $segment,
-            $url = null,
-            $data = null,
-            $buttons = null,
-            $schedule = null
-        );
+        $user = DB::table('users')
+                ->join('task_trans_details','users.id','task_trans_details.user_id')
+                ->select('users.player_id as player_id')
+                ->where('task_trans_details.header_id',$id)
+                ->get();
+        
+        foreach($user as $users){
+            $array_user[]=$users->player_id;
+        }
+        $oneSignal = OneSignal::sendNotificationCustom([
+            'contents' => [
+                'en' => 'You got a new exam! ',
+            ],
+            'include_player_ids' => $array_user
+        ]);
+        // print_r($array_user);
+        // print_r($array_user);
+        
+        // $oneSignal = OneSignal::sendNotificationToSegment(
+        //     "Some Message",
+        //     $segment,
+        //     $url = null,
+        //     $data = null,
+        //     $buttons = null,
+        //     $schedule = null
+        // );
         return $generate;
     }
 
