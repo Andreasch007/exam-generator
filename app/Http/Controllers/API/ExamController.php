@@ -70,23 +70,29 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $query2 = DB::table('users')
-                ->join('companies','id','=','companies.user_id')
-                ->select('email')
-                ->where('email',$email)
-                if ($query2->email==NULL)
-                    $user = Company::all();
+                    ->select('company_id')
+                    ->where('email',$email)
+                    ->first();
+                if (is_null($query2))
+                {
+                    $company = Company::all();
+                }
                 else
-                    $user = Company::select('company.*')
-                    ->where($user->id,'companies.user_id');
-
-            }
-
-            return $this->sendResponse($user, 'Success');
-        } 
-        else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
+                {
+                    $company = DB::table('companies')
+                    ->join('users','companies.id','=','users.company_id')
+                    ->select('companies.name','companies.user_id','companies.company')
+                    ->where('users.email',$email)
+                    ->get();
+                }
+                return $this->sendResponse($company, 'Success');
+             }
+            else{ 
+                return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            } 
+        }
     }
+        
 
     public function getExam(Request $request){
         if(isset($_POST['email'])){
