@@ -69,7 +69,16 @@ class ExamController extends BaseController
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
-                $user = Company::all();
+                $query2 = DB::table('users')
+                ->join('companies','id','=','companies.user_id')
+                ->select('email')
+                ->where('email',$email)
+                if ($query2->email==NULL)
+                    $user = Company::all();
+                else
+                    $user = Company::select('company.*')
+                    ->where($user->id,'companies.user_id');
+
             }
 
             return $this->sendResponse($user, 'Success');
