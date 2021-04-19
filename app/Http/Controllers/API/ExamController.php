@@ -73,7 +73,7 @@ class ExamController extends BaseController
                     ->select('company_id')
                     ->where('email',$email)
                     ->first();
-                if (is_null($query2))
+                if ($query2->company_id==null)
                 {
                     $company = Company::all()->get();
                 }
