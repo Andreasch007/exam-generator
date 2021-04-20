@@ -164,7 +164,7 @@ class TaskHeaderCrudController extends CrudController
                         'attribute' =>  'name',
                         'options'   => (function ($query) {
                             $user = Auth::user();
-                            return $query->where('company_id', $user->company_id)->get();
+                            return $query->where('company_id', $user->company_id)->where('approval','Approved')->get();
                         }), 
                         // 'wrapperAttributes' => [
                         //     'class' => 'form-group col-md-8'
