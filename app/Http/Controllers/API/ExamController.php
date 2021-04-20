@@ -85,7 +85,7 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id')
                     ->where('users.email',$email)
                     ->get();
                     
@@ -95,7 +95,6 @@ class ExamController extends BaseController
                             'company_id'    => $companies->company_id,
                             'company_name'  => $companies->company_name,
                             'user_id'       => $companies->user_id,
-                            'user_name'     => $companies->user_name
                         ];
                     }
                 }
@@ -195,7 +194,7 @@ class ExamController extends BaseController
             {
                 $update = DB::table('users')
                 ->where('email',$email)
-                -update([
+                ->update([
                     'company_id'=>$company_id
                 ]);
             }
