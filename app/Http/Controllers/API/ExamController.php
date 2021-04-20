@@ -75,7 +75,9 @@ class ExamController extends BaseController
                     ->first();
                 if ($query2->company_id==null)
                 {
-                    $response = Company::all();
+                    $response = DB::table('companies')
+                                ->select('companies.name as company_name','companies.id as company_id') 
+                                ->get();
                 }
                 else
                 {
