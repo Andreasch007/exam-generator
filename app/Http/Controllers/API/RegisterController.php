@@ -53,7 +53,7 @@ class RegisterController extends BaseController
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) && isset($_POST['playerID']) && isser($_POST['uid'])){ 
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) && isset($_POST['playerID']) && isset($_POST['uid'])){ 
             $user = Auth::user(); 
             $playerID = $_POST['playerID'];
             $device_id = $_POST['uid'];
