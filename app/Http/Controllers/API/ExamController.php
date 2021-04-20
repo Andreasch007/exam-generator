@@ -39,26 +39,26 @@ class ExamController extends BaseController
         } 
     }
 
-    // public function getProfile(Request $request){
-    //     if(isset($_POST['email'])){ 
-    //         $user = Auth::user();
-    //         $email = $_POST['email'];
-    //         $query = DB::table('users')
-    //                 ->select(DB::raw('COUNT(users.id) as totalemail'))
-    //                 ->where('email',$email)
-    //                 ->first();
-    //         if($query->totalemail>=1){
-    //             $user = User::select('users.*')
-    //             ->where('email',$email)
-    //             ->first();
-    //         }
+    public function getProfile(Request $request){
+        if(isset($_POST['email'])){ 
+            $user = Auth::user();
+            $email = $_POST['email'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'))
+                    ->where('email',$email)
+                    ->first();
+            if($query->totalemail>=1){
+                $user = User::select('users.*')
+                ->where('email',$email)
+                ->first();
+            }
 
-    //         return $this->sendResponse($user, 'Success');
-    //     } 
-    //     else{ 
-    //         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-    //     } 
-    // }
+            return $this->sendResponse($user, 'Success');
+        } 
+        else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
 
     public function getCompany(Request $request){
         if(isset($_POST['email'])){ 
@@ -85,7 +85,7 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id')
                     ->where('users.email',$email)
                     ->get();
                     
@@ -95,7 +95,6 @@ class ExamController extends BaseController
                             'company_id'    => $companies->company_id,
                             'company_name'  => $companies->company_name,
                             'user_id'       => $companies->user_id,
-                            'user_name'     => $companies->user_name
                         ];
                     }
                 }

@@ -23,12 +23,7 @@ Route::post('login', 'App\Http\Controllers\API\RegisterController@login');
 Route::post('category', 'App\Http\Controllers\API\ExamController@getCategory');
 Route::post('exam','App\Http\Controllers\API\ExamController@getExam');
 Route::post('questionanswer','App\Http\Controllers\API\ExamController@getQuestion');
-<<<<<<< HEAD
-Route::post('edit-profile','App\Http\Controllers\API\ExamController@getCompany');
+Route::post('edit-profile','App\Http\Controllers\API\ExamController@getProfile');
 Route::post('company','App\Http\Controllers\API\ExamController@getCompany');
-=======
-// Route::post('edit-profile','App\Http\Controllers\API\ExamController@getProfile');
-Route::post('edit-profile','App\Http\Controllers\API\ExamController@getCompany');
->>>>>>> f5f7618bd8e21377445b2275a2369f0bd10a1cf1
 Route::post('updatejournal','App\Http\Controllers\API\ExamController@updateResultJournal');
 Route::post('save-data','App\Http\Controllers\API\ExamController@updateCompany');
