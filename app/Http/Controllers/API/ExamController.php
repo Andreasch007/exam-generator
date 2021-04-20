@@ -81,7 +81,7 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name','users.id','companies.id')
+                    ->select('companies.name','users.id','companies.id, users.name')
                     ->where('users.email',$email)
                     ->first();
                 }
