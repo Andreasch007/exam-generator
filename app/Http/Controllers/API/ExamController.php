@@ -87,11 +87,11 @@ class ExamController extends BaseController
                     ->join('users','companies.id','=','users.company_id')
                     ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
                     ->where('users.email',$email)
-                    ->first();
-
+                    ->get();
+                    
                     $response = [];
                     foreach($company as $companies){
-                        $response = [
+                        $response[] = [
                             'company_id'    => $companies->company_id,
                             'company_name'  => $companies->company_name,
                             'user_id'       => $companies->user_id,
