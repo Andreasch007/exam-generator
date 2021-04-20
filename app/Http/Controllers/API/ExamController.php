@@ -196,7 +196,7 @@ class ExamController extends BaseController
             {
                 $update = DB::table('users')
                 ->where('email',$email)
-                -update([
+                ->update([
                     'company_id'=>$company_id,
                     'name'=>$name
                 ]);
