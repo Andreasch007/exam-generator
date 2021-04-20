@@ -73,7 +73,7 @@ class ExamController extends BaseController
                     ->select('company_id')
                     ->where('email',$email)
                     ->first();
-                if ($query2 == null)
+                if ($query2->company_id==null)
                 {
                     $company = Company::all();
                 }
@@ -81,7 +81,7 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name','users.id','companies.company')
+                    ->select('companies.name','users.id','companies.id')
                     ->where('users.email',$email)
                     ->first();
                 }
