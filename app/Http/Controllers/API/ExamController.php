@@ -75,17 +75,31 @@ class ExamController extends BaseController
                     ->first();
                 if ($query2->company_id==null)
                 {
-                    $company = Company::all();
+                    $response = DB::table('companies')
+                    ->leftjoin('users','companies.id','=','users.company_id')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
+                    ->where('users.email',$email)
+                    ->get();
                 }
                 else
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name','users.id','companies.id')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
                     ->where('users.email',$email)
-                    ->first();
+                    ->get();
+                    
+                    $response = [];
+                    foreach($company as $companies){
+                        $response[] = [
+                            'company_id'    => $companies->company_id,
+                            'company_name'  => $companies->company_name,
+                            'user_id'       => $companies->user_id,
+                            'user_name'     => $companies->user_name
+                        ];
+                    }
                 }
-                return $this->sendResponse($company, 'Success');
+                return $this->sendResponse($response, 'Success');
              }
             else{ 
                 return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
