@@ -73,7 +73,7 @@ class ExamController extends BaseController
                     ->select('company_id')
                     ->where('email',$email)
                     ->first();
-                if (is_null($query2))
+                if ($query2 == null)
                 {
                     $company = Company::all();
                 }
@@ -81,9 +81,9 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name','companies.user_id','companies.company')
+                    ->select('companies.name','users.id','companies.company')
                     ->where('users.email',$email)
-                    ->get();
+                    ->first();
                 }
                 return $this->sendResponse($company, 'Success');
              }
@@ -167,6 +167,28 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
         
+    }
+
+    public function updateCompany(Request $request){
+        if(isset($_POST['email']) && isset($_POST['company_id'])){
+            $email = $_POST['email'];
+            $company_id = $_POST['company_id'];
+            $query = DB::table('users')
+            ->select(DB::raw('COUNT(users.id) as totalemail'))
+            ->where('email',$email)
+            ->first();
+            if($query->totalemail>=1)
+            {
+                $update = DB::table('users')
+                ->where('email',$email)
+                -update([
+                    'company_id'=>$company_id
+                ]);
+            }
+            return $this->sendResponse($update, 'Success');
+        } else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
     }
 
     public function updateResultJournal(Request $request){

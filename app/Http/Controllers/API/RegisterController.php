@@ -59,6 +59,8 @@ class RegisterController extends BaseController
             $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
             $success['email'] = $user->email;
+            $success['company_id'] = $user->company_id;
+
 
             $update = DB::table('users')
                       ->where('users.email',$user->email)
