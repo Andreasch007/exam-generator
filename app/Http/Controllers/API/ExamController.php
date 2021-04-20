@@ -39,26 +39,26 @@ class ExamController extends BaseController
         } 
     }
 
-    public function getProfile(Request $request){
-        if(isset($_POST['email'])){ 
-            $user = Auth::user();
-            $email = $_POST['email'];
-            $query = DB::table('users')
-                    ->select(DB::raw('COUNT(users.id) as totalemail'))
-                    ->where('email',$email)
-                    ->first();
-            if($query->totalemail>=1){
-                $user = User::select('users.*')
-                ->where('email',$email)
-                ->first();
-            }
+    // public function getProfile(Request $request){
+    //     if(isset($_POST['email'])){ 
+    //         $user = Auth::user();
+    //         $email = $_POST['email'];
+    //         $query = DB::table('users')
+    //                 ->select(DB::raw('COUNT(users.id) as totalemail'))
+    //                 ->where('email',$email)
+    //                 ->first();
+    //         if($query->totalemail>=1){
+    //             $user = User::select('users.*')
+    //             ->where('email',$email)
+    //             ->first();
+    //         }
 
-            return $this->sendResponse($user, 'Success');
-        } 
-        else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
-    }
+    //         return $this->sendResponse($user, 'Success');
+    //     } 
+    //     else{ 
+    //         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+    //     } 
+    // }
 
     public function getCompany(Request $request){
         if(isset($_POST['email'])){ 
@@ -70,7 +70,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $query2 = DB::table('users')
-                    ->select('company_id')
+                    ->select('company_id','name')
                     ->where('email',$email)
                     ->first();
                 if ($query2->company_id==null)
@@ -173,6 +173,7 @@ class ExamController extends BaseController
         if(isset($_POST['email']) && isset($_POST['company_id'])){
             $email = $_POST['email'];
             $company_id = $_POST['company_id'];
+            $name = $_POST['name'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
@@ -182,7 +183,8 @@ class ExamController extends BaseController
                 $update = DB::table('users')
                 ->where('email',$email)
                 -update([
-                    'company_id'=>$company_id
+                    'company_id'=>$company_id,
+                    'name'=>$name
                 ]);
             }
             return $this->sendResponse($update, 'Success');
