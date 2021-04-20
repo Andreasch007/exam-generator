@@ -75,7 +75,11 @@ class ExamController extends BaseController
                     ->first();
                 if ($query2->company_id==null)
                 {
-                    $company = Company::all();
+                    $company = DB::table('companies')
+                    ->leftjoin('users','companies.id','=','users.company_id')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id, users.name as user_name')
+                    ->where('users.email',$email)
+                    ->get();
                 }
                 else
                 {
