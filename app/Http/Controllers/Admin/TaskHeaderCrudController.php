@@ -207,6 +207,7 @@ class TaskHeaderCrudController extends CrudController
         $taskheader = new TaskHeader();
         $taskheader->doc_date = $input['doc_date'];
         $taskheader->start_time = $input['start_time'];
+        $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
         $taskheader->save();
 
@@ -231,6 +232,7 @@ class TaskHeaderCrudController extends CrudController
         $taskheader = TaskHeader::where('id',$id)->first();
         $taskheader->doc_date = $input['doc_date'];
         $taskheader->start_time = $input['start_time'];
+        $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
         $taskheader->save();  
 
