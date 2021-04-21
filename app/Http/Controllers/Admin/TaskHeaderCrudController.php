@@ -99,8 +99,13 @@ class TaskHeaderCrudController extends CrudController
              [
                  'label'    =>  'Start Time',
                  'name'     =>  'start_time',
-                 'type'     =>  'time'
+                 'type'     =>  'datetime'
              ],
+             [
+                'label'    =>  'End Time',
+                'name'     =>  'end_time',
+                'type'     =>  'datetime'
+            ],
              [
                  'label'    =>  'Task',
                  'name'     =>  'exam_id',
@@ -137,7 +142,12 @@ class TaskHeaderCrudController extends CrudController
             [
                 'label'     =>  'Start Time',
                 'name'      =>  'start_time',
-                'type'      =>  'time'
+                'type'      =>  'datetime'
+            ],
+            [
+                'label'     =>  'End Time',
+                'name'      =>  'end_time',
+                'type'      =>  'datetime'
             ],
             [
                 'label'     =>  'Exam',
