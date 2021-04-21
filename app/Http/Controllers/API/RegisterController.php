@@ -34,7 +34,11 @@ class RegisterController extends BaseController
         $input['password'] = bcrypt($input['password']);//hash("sha256", $input['password']);
         
         if($query->totalemail>=1){
-            return $this->sendError('Unauthorised',['error' => 'User already existed']);
+            $response = array("error" => FALSE);
+            $response["error"] = TRUE;
+            $response["message"] = 'User already existed';
+
+            return json_encode($response);
         } else {
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyApp')->accessToken;
