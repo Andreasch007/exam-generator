@@ -121,7 +121,7 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
-                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml, TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'))
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'))
                         ->where('users.email','=',$email)
                         ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time')
                         ->orderBy('task_journal_exams.doc_date')
