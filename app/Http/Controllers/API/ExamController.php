@@ -124,7 +124,7 @@ class ExamController extends BaseController
                         'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'))
                         ->where('users.email','=',$email)
                         ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time')
-                        ->orderBy('task_journal_exams.doc_date')
+                        ->orderBy('task_journal_exams.doc_date', 'DESC')
                         ->get();
             }
             return $this->sendResponse($exam, 'Success');
