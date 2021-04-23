@@ -20,6 +20,7 @@ class CreateQuestionsTable extends Migration
             $table->string('question_desc1');
             $table->string('question_desc2');
             $table->string('question_type');
+            $table->integer('company_id');
             $table->timestamps();
         });
     }

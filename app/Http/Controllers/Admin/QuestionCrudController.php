@@ -35,11 +35,8 @@ class QuestionCrudController extends CrudController
         CRUD::setEntityNameStrings('question', 'questions');
         $this->crud->orderBy('exam_id', 'ASC');
         $this->crud->orderBy('question_no', 'ASC');
-        $this->crud->addClause('join', 'exams', function ($query){
-            $user = Auth::user();
-            $query->on('questions.exam_id','exams.id')
-            ->where('exams.company_id',$user->company_id);
-        });
+        $user = Auth::user();
+        $this->crud->addClause('where', 'company_id', '=', $user->company_id);
     }
 
     /**
