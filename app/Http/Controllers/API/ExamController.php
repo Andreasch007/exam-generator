@@ -161,8 +161,11 @@ class ExamController extends BaseController
 
                     $answer = DB::table('answers')
                               ->join('task_journal_answers','answers.id','task_journal_answers.answer_id')
+                              ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                              ->join('users','task_journal_exams.user_id','=','users.id')
                               ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val','answers.answer_no')
                               ->where('answers.question_id','=',$exams->question_id)
+                              ->where('users.email',$email)
                               ->orderBy('task_journal_answers.idx')
                               ->get();
                     $response[] = [
