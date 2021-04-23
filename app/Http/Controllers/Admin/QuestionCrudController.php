@@ -256,7 +256,7 @@ class QuestionCrudController extends CrudController
                 $answer->answer_no = $options->answer_no;
                 $answer->answer_desc1 = $options->answer_desc1;
                 $answer->answer_desc2 = $options->answer_desc2;
-                $answer->answer_val = $options->answer_val;
+                // $answer->answer_val = $options->answer_val;
                 $answer->question_id = $question->id;
                 $answer->save();
             }
