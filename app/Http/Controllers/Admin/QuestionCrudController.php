@@ -138,7 +138,7 @@ class QuestionCrudController extends CrudController
                         'answer_no'     => 'No',
                         'answer_desc1'  => 'Description1',
                         'answer_desc2'  => 'Description2',
-                        'answer_val'  => 'Value'
+                        // 'answer_val'  => 'Value'
                     ],
                     'max' => 4, // maximum rows allowed in the table
                     'min' => 0, // minimum rows allowed in the table
@@ -193,7 +193,7 @@ class QuestionCrudController extends CrudController
                         'answer_no'     => 'No',
                         'answer_desc1'  => 'Description1',
                         'answer_desc2'  => 'Description2',
-                        'answer_val'    => 'Value',
+                        // 'answer_val'    => 'Value',
                     ],
                     // 'value'          => 
                     'max' => 4, // maximum rows allowed in the table
@@ -223,7 +223,7 @@ class QuestionCrudController extends CrudController
                 $answers->answer_no = $options->answer_no;
                 $answers->answer_desc2 = $options->answer_desc1;
                 $answers->answer_val = $options->answer_desc2;
-                $answers->answer_val = $options->answer_val;
+                // $answers->answer_val = $options->answer_val;
                 $answers->question_id = $question->id;
                 $answers->save();
             }
