@@ -257,10 +257,7 @@ class ExamController extends BaseController
             
             return $this->sendResponse($update, 'Success');
         }else{ 
-            $response = array("error" => FALSE);
-            $response["error"] = TRUE;
-            $response["message"] = 'Jawaban Kosong!';
-        return json_encode($response);
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
     
