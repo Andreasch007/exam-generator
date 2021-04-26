@@ -19,6 +19,7 @@ class CreateExamsTable extends Migration
             $table->integer('company_id');
             $table->integer('exam_no');
             $table->string('exam_name');
+            $table->text('exam_rule');
             $table->timestamps();
         });
     }

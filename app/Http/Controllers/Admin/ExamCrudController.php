@@ -121,6 +121,11 @@ class ExamCrudController extends CrudController
                         return $query->orderBy('category_name', 'ASC')->get();
                     }), // force the related options to be a custom query, instead of all(); you can use this to filter the results show in the select
             ],
+            [
+                'label'     => 'Rule',
+                'name'      => 'exam_rule',
+                'type'      => 'textarea'
+            ],
             // [   // Table
             //     'name'            => 'questions',
             //     'label'           => 'Question',
@@ -218,6 +223,7 @@ class ExamCrudController extends CrudController
         $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
         $exam->exam_name = $input['exam_name'];
+        $exam->exam_rule = $input['exam_rule'];
         $exam->user_id = $user->id;
         $exam->company_id = $user->company_id;
         $exam->save();
@@ -245,6 +251,7 @@ class ExamCrudController extends CrudController
         $exam = Exam::where('id',$id)->first();
         $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
+        $exam->exam_rule = $input['exam_rule'];
         $exam->exam_name = $input['exam_name'];
         $exam->save();  
 
