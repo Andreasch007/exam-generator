@@ -76,10 +76,8 @@ class ExamController extends BaseController
                 if ($query2->company_id==null)
                 {
                     $response = DB::table('companies')
-                    ->leftjoin('users','companies.id','=','users.company_id')
-                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
-                    ->where('users.email',$email)
-                    ->get();
+                                ->select('companies.name as company_name','companies.id as company_id') 
+                                ->get();
                 }
                 else
                 {
@@ -122,9 +120,12 @@ class ExamController extends BaseController
                         ->join('task_journal_exams','exams.id','task_journal_exams.exam_id')
                         ->join('users','task_journal_exams.user_id','=','users.id')
                         ->join('categories','exams.category_id','categories.id')
-                        ->select('categories.*','exams.*','task_journal_exams.doc_date','task_journal_exams.start_time')
+                        ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
+                        ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 'exams.exam_rule')
                         ->where('users.email','=',$email)
-                        ->orderBy('task_journal_exams.doc_date')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule')
+                        ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }
             return $this->sendResponse($exam, 'Success');
@@ -149,7 +150,7 @@ class ExamController extends BaseController
                         // ->join('answers','answers.question_id','=','questions.id')
                         ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                         ->join('users','task_journal_exams.user_id','=','users.id')
-                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'questions.exam_id')
+                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type')
                         // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('questions.exam_id','=',$exam_id)
                         ->where('users.email',$email)
@@ -161,8 +162,12 @@ class ExamController extends BaseController
 
                     $answer = DB::table('answers')
                               ->join('task_journal_answers','answers.id','task_journal_answers.answer_id')
-                              ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val','answers.answer_no')
+                              ->join('task_journal_questions','task_journal_answers.hdr_qid','task_journal_questions.id')
+                              ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                              ->join('users','task_journal_exams.user_id','=','users.id')
+                              ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_no')
                               ->where('answers.question_id','=',$exams->question_id)
+                              ->where('users.email',$email)
                               ->orderBy('task_journal_answers.idx')
                               ->get();
                     $response[] = [
@@ -381,7 +386,7 @@ class ExamController extends BaseController
             
             return $this->sendResponse($update, 'Success');
         }else{ 
-        return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
     

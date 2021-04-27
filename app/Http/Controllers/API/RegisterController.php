@@ -34,7 +34,11 @@ class RegisterController extends BaseController
         $input['password'] = bcrypt($input['password']);//hash("sha256", $input['password']);
         
         if($query->totalemail>=1){
-            return $this->sendError('User already existed');
+            $response = array("error" => FALSE);
+            $response["error"] = TRUE;
+            $response["message"] = 'User already existed';
+
+            return json_encode($response);
         } else {
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyApp')->accessToken;
@@ -53,9 +57,10 @@ class RegisterController extends BaseController
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) && isset($_POST['playerID'])){ 
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) && isset($_POST['playerID']) && isset($_POST['uid'])){ 
             $user = Auth::user(); 
             $playerID = $_POST['playerID'];
+            $device_id = $_POST['uid'];
             $success['token'] =  $user->createToken('MyApp')->accessToken; 
             $success['name'] =  $user->name;
             $success['email'] = $user->email;
@@ -65,13 +70,18 @@ class RegisterController extends BaseController
             $update = DB::table('users')
                       ->where('users.email',$user->email)
                       ->update([
-                          'player_id' => $playerID
+                          'player_id' => $playerID,
+                          'uid'       => $device_id  
                       ]);
    
             return $this->sendResponse($success, 'User login successfully.');
         } 
         else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            $response = array("error" => FALSE);
+            $response["error"] = TRUE;
+            $response["message"] = "Incorrect Email or Password!";
+
+            return json_encode($response);
         } 
     }
 }

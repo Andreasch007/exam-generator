@@ -99,8 +99,13 @@ class TaskHeaderCrudController extends CrudController
              [
                  'label'    =>  'Start Time',
                  'name'     =>  'start_time',
-                 'type'     =>  'time'
+                 'type'     =>  'datetime'
              ],
+             [
+                'label'    =>  'End Time',
+                'name'     =>  'end_time',
+                'type'     =>  'datetime'
+            ],
              [
                  'label'    =>  'Task',
                  'name'     =>  'exam_id',
@@ -137,7 +142,12 @@ class TaskHeaderCrudController extends CrudController
             [
                 'label'     =>  'Start Time',
                 'name'      =>  'start_time',
-                'type'      =>  'time'
+                'type'      =>  'datetime'
+            ],
+            [
+                'label'     =>  'End Time',
+                'name'      =>  'end_time',
+                'type'      =>  'datetime'
             ],
             [
                 'label'     =>  'Exam',
@@ -164,7 +174,7 @@ class TaskHeaderCrudController extends CrudController
                         'attribute' =>  'name',
                         'options'   => (function ($query) {
                             $user = Auth::user();
-                            return $query->where('company_id', $user->company_id)->get();
+                            return $query->where('company_id', $user->company_id)->where('approval','Approved')->get();
                         }), 
                         // 'wrapperAttributes' => [
                         //     'class' => 'form-group col-md-8'
@@ -193,11 +203,14 @@ class TaskHeaderCrudController extends CrudController
     {
         $input = $request->all();
         $option = json_decode($input['taskdetails']);
+        $user = Auth::user();
 
         $taskheader = new TaskHeader();
         $taskheader->doc_date = $input['doc_date'];
         $taskheader->start_time = $input['start_time'];
+        $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
+        $taskheader->company_id = $user->company_id;
         $taskheader->save();
 
         if($option!=''){
@@ -221,7 +234,9 @@ class TaskHeaderCrudController extends CrudController
         $taskheader = TaskHeader::where('id',$id)->first();
         $taskheader->doc_date = $input['doc_date'];
         $taskheader->start_time = $input['start_time'];
+        $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
+        // $taskheader->company_id = $user->company_id;
         $taskheader->save();  
 
         TaskDetail::where('header_id',$id)->delete();
