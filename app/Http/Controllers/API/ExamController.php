@@ -10,6 +10,10 @@ use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
+// use Illuminate\Support\Facades\Password;
+use Mail;
+use Validator;
+// use Message;
 
 class ExamController extends BaseController
 {
@@ -39,26 +43,26 @@ class ExamController extends BaseController
         } 
     }
 
-    public function getProfile(Request $request){
-        if(isset($_POST['email'])){ 
-            $user = Auth::user();
-            $email = $_POST['email'];
-            $query = DB::table('users')
-                    ->select(DB::raw('COUNT(users.id) as totalemail'))
-                    ->where('email',$email)
-                    ->first();
-            if($query->totalemail>=1){
-                $user = User::select('users.*')
-                ->where('email',$email)
-                ->first();
-            }
+    // public function getProfile(Request $request){
+    //     if(isset($_POST['email'])){ 
+    //         $user = Auth::user();
+    //         $email = $_POST['email'];
+    //         $query = DB::table('users')
+    //                 ->select(DB::raw('COUNT(users.id) as totalemail'))
+    //                 ->where('email',$email)
+    //                 ->first();
+    //         if($query->totalemail>=1){
+    //             $user = User::select('users.*')
+    //             ->where('email',$email)
+    //             ->first();
+    //         }
 
-            return $this->sendResponse($user, 'Success');
-        } 
-        else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
-    }
+    //         return $this->sendResponse($user, 'Success');
+    //     } 
+    //     else{ 
+    //         return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+    //     } 
+    // }
 
     public function getCompany(Request $request){
         if(isset($_POST['email'])){ 
@@ -83,7 +87,7 @@ class ExamController extends BaseController
                 {
                     $company = DB::table('companies')
                     ->join('users','companies.id','=','users.company_id')
-                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id')
+                    ->select('companies.name as company_name','users.id as user_id','companies.id as company_id', 'users.name as user_name')
                     ->where('users.email',$email)
                     ->get();
                     
@@ -93,6 +97,7 @@ class ExamController extends BaseController
                             'company_id'    => $companies->company_id,
                             'company_name'  => $companies->company_name,
                             'user_id'       => $companies->user_id,
+                            'user_name'     => $companies->user_name
                         ];
                     }
                 }
@@ -210,7 +215,144 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
     }
+    
+    public function getPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $input=$request->all();
+        // $email = $_POST['email'];
+        // $rules = array(
+        //     'email' => "required|email",
+        // );
+        // $validator = Validator::make($input, $rules);
+        // if ($validator->fails()) {
+        //     $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+        // } else {
+        $query = DB::table('users')
+        ->select(DB::raw('COUNT(users.id) as totalemail'))
+        ->where('email',$input['email'])
+        ->first();
+        if($query->totalemail>=1)
+            {   
+                $query2 = DB::table('users')
+                 ->select('name')
+                 ->where('email',$input['email'])
+                 ->first();
+                        
+                $data = array($query2->name);
+                Mail::send([],[], function($message) use($input) {
+                    $message->to($input['email'])
+                            ->subject('Your New Password ')
+                            ->setBody(
+                                '<html><h3>This is your New Password = </h3>
+                                <br><bold> 12345678 </bold>
+                                <br><br><bold> Please remember your password AND Do Not Share Your Password
+                                to Anyone !!! </bold></html>','text/html'
+                            );
+                    $message->from(env('MAIL_USERNAME','victoriussaputra@gmail.com'),'Victorius');
+                });
+                $update = DB::table('users')
+                ->where('email',$input['email'])
+                ->update([
+                            'password' => bcrypt('12345678')
+                        ]);
+                return $this->sendResponse($update, 'Message Sent. Please Check Your Email');
+            }
+        else
+        { 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        }
+                        // try 
+                        // {
+                        //         $response = Password::sendResetLink(
+                        //             $request->only('email'), function (Message $message) {
+                        //                 $message->subject('Reset Password Confirmation Link');
+                        //             });
+                        // //         switch ($response) 
+                        // //         {
+                        // //             case Password::RESET_LINK_SENT: 
+                        // //                 $input['password'] = bcrypt($input['12345678']);
+                        // //                 $update = DB::table('users')
+                        // //                 ->where('email',$input['email'])
+                        // //                 ->update(
+                        // //                     ['password' => $input['password']]
+                        // //                 );
+                        // //             return $this->sendResponse($update, 'Check Your Email');
+                                    
+                        // //             case Password::INVALID_USER:
+                        // //             return \Response::json(array("status" => 400, "message" => trans($response), "data" => array()));
+                        // //         }
+                        // }   
+                        // catch (\Swift_TransportException $ex) 
+                        // {
+                        //     $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
+                        // } 
+                        // catch (Exception $ex) 
+                        // {
+                        //     $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
+                        // }
+                    // }
+                // }
+        // return \Response::json($arr);
+                    
+    }
 
+    // public function changePassword(Request $request){
+    //     if(isset($_POST['email']) && isset($_POST['password'])){
+    //         $email = $_POST['email'];
+    //         $password = $_POST['password'];
+    //         $input = $request->all();
+    //         $userid = Auth::guard('api')->user()->id;
+    //         // $rules = array(
+    //         // 'old_password' => 'required',
+    //         // 'new_password' => 'required|min:6',
+    //         // 'confirm_password' => 'required|same:new_password',
+    //         // );
+    //         // $validator = Validator::make($input, $rules);
+    //         $query = DB::table('users')
+    //             ->select(DB::raw('COUNT(users.id) as totalemail'))
+    //             ->where('email',$email)
+    //             ->first();
+    //         if($query->totalemail>=1)
+    //         {
+    //             if ($validator->fails()) {
+    //                 $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+    //             } else {
+    //                 try {
+    //                     if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
+    //                         $arr = array("status" => 400, "message" => "Check your old password.", "data" => array());
+    //                     } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
+    //                         $arr = array("status" => 400, "message" => "Please enter a password which is not similar then current password.", "data" => array());
+    //                     } else {
+    //                         User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
+    //                         $update = DB::table('users')
+    //                         ->where('email',$email)
+    //                         ->update([
+    //                             'password'=>$password,
+    //                         ]);
+    //                         $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
+    //                     }
+    //                 } catch (\Exception $ex) {
+    //                     if (isset($ex->errorInfo[2])) {
+    //                         $msg = $ex->errorInfo[2];
+    //                     } else {
+    //                         $msg = $ex->getMessage();
+    //                     }
+    //                     $arr = array("status" => 400, "message" => $msg, "data" => array());
+    //                 }
+    //             }
+    //             return \Response::json($arr);
+    //         }
+    //         else{ 
+    //             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+    //         }
+    //     }
+    // }
     public function updateResultJournal(Request $request){
         if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id'])){
             $email = $_POST['email'];
