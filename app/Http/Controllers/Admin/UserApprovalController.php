@@ -33,10 +33,13 @@ class UserApprovalController extends CrudController
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/UserApproval');
         CRUD::setEntityNameStrings('UserApproval', 'User Approval');
+       
         CRUD::denyAccess('create');
         $user = Auth::user();
         $this->crud->addClause('where', 'company_id', '=', $user->company_id);
         $this->crud->addClause('where', 'company_id', '!=', 0);
+        $count = Company::count()->where('id',$uer->company_id);
+        dd($count);
     }
 
     /**
