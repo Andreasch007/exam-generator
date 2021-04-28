@@ -216,7 +216,7 @@ class ExamController extends BaseController
         }
     }
     
-    public function getPassword(Request $request){
+    public function forgotPassword(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
         ]);
@@ -259,7 +259,7 @@ class ExamController extends BaseController
                 $update = DB::table('users')
                 ->where('email',$input['email'])
                 ->update([
-                            'password' => bcrypt('12345678')
+                            'password' => bcrypt('passw')
                         ]);
                 return $this->sendResponse($update, 'Message Sent. Please Check Your Email');
             }
