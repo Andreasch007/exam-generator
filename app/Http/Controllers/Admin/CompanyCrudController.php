@@ -35,7 +35,8 @@ class CompanyCrudController extends CrudController
         $user = Auth::user();
         $this->crud->addClause('where', 'id', '=', $user->company_id);
         $count = DB::table('companies')->select(DB::raw('COUNT(*) as counts'))->where('id',$user->company_id)->get();
-        if(strlen($count)>0){
+        // dd($count);
+        if($count[0]->counts>0){
             CRUD::denyAccess('create');
         }
     }
