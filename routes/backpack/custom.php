@@ -26,3 +26,17 @@ Route::group([
     Route::POST('generate/{id}','TaskHeaderCrudController@generateTransaction');
 
 }); // this should be the absolute last line of this file
+
+Route::group(
+    [
+        'namespace'  => 'App\Http\Controllers',
+        'middleware' => config('backpack.base.web_middleware', 'web'),
+        'prefix'     => config('backpack.base.route_prefix'),
+    ],
+function () {
+    // Registration Routes...
+    if (config('backpack.base.setup_auth_routes')) {
+        Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('backpack.auth.register');
+        Route::post('register', 'Auth\RegisterController@register');
+    }
+});
