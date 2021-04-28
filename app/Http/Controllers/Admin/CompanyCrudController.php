@@ -34,7 +34,7 @@ class CompanyCrudController extends CrudController
         CRUD::setEntityNameStrings('company', 'companies');
         $user = Auth::user();
         $this->crud->addClause('where', 'id', '=', $user->company_id);
-        $count = Company::count()->where('id',$uer->company_id);
+        $count = Company::count()->where('id',$user->company_id);
         if($count>0){
             CRUD::denyAccess('create');
         }

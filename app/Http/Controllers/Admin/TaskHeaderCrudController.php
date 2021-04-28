@@ -91,6 +91,11 @@ class TaskHeaderCrudController extends CrudController
          */
 
          CRUD::addColumns([
+            [
+                'label'     => 'Extern No',
+                'name'      => 'extern_no',
+                'type'      => 'text'
+            ],
              [
                  'label'    =>  'Date',
                  'name'     =>  'doc_date',
@@ -112,6 +117,11 @@ class TaskHeaderCrudController extends CrudController
                  'entity'   =>  'exam',
                  'attribute' =>  'exam_name',
                  'type'     =>  'select',
+             ],
+             [
+                 'label'    => 'Remark',
+                 'name'     => 'doc_remark',
+                 'type'     => 'textarea'
              ]
          ]);
     }
@@ -134,6 +144,11 @@ class TaskHeaderCrudController extends CrudController
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
         CRUD::addFields([
+            [
+                'label'     => 'Extern No',
+                'name'      => 'extern_no',
+                'type'      => 'text'
+            ],
             [
                 'label'     =>  'Date',
                 'name'      =>  'doc_date',
@@ -160,6 +175,11 @@ class TaskHeaderCrudController extends CrudController
                     $user = Auth::user();
                     return $query->orderBy('exam_no', 'ASC')->where('company_id', $user->company_id)->get();
                 }), 
+            ],
+            [
+                'label'     => 'Remark',
+                'name'      => 'doc_remark',
+                'type'      => 'textarea'
             ],
             [   
                 'name'            => 'taskdetails',
