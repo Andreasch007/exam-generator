@@ -230,6 +230,8 @@ class TaskHeaderCrudController extends CrudController
         $taskheader->start_time = $input['start_time'];
         $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
+        $taskheader->extern_no = $input['extern_no'];
+        $taskheader->doc_remark = $input['doc_remark'];
         $taskheader->company_id = $user->company_id;
         $taskheader->save();
 
@@ -256,6 +258,8 @@ class TaskHeaderCrudController extends CrudController
         $taskheader->start_time = $input['start_time'];
         $taskheader->end_time = $input['end_time'];
         $taskheader->exam_id = $input['exam_id'];
+        $taskheader->extern_no = $input['extern_no'];
+        $taskheader->doc_remark = $input['doc_remark'];
         // $taskheader->company_id = $user->company_id;
         $taskheader->save();  
 
