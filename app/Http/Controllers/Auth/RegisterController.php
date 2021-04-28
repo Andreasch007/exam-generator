@@ -31,6 +31,7 @@ class RegisterController extends BackpackRegisterController
             'name'                             => $data['name'],
             backpack_authentication_column()   => $data[backpack_authentication_column()],
             'password'                         => bcrypt($data['password']),
+            'approval'                         =>'Approved'
         ]);
 
         return $createuser->assignRole('Admin');
