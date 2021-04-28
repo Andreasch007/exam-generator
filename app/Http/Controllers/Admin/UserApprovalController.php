@@ -36,6 +36,7 @@ class UserApprovalController extends CrudController
         CRUD::denyAccess('create');
         $user = Auth::user();
         $this->crud->addClause('where', 'company_id', '=', $user->company_id);
+        $this->crud->addClause('where', 'company_id', '!=', 0);
     }
 
     /**

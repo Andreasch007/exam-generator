@@ -19,7 +19,10 @@ class CreateTaskTransHeadersTable extends Migration
             $table->datetime('start_time', $precision = 0);
             $table->datetime('end_time', $precision = 0);
             $table->integer('company_id');
+            $table->text('extern_no');
+            $table->text('doc_remark');
             $table->timestamps();
+
         });
     }
 
