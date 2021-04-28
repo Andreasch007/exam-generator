@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use DB;
 
-class RegisterAPIController extends BaseController
+class RegisterController extends BaseController
 {
     //
     public function register(Request $request)
