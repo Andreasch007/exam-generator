@@ -11,7 +11,7 @@
 <li class='nav-item'><a class='nav-link' href="{{ backpack_url('journalexam') }}"><i class="nav-icon las la-journal-whills"></i></i> Journal Exams</a></li>
 @php
 $user = Auth::user();
-$nofitication=DB::table('users')->select(DB::raw('COUNT(*) as count'))->where('approval','<>','Approved')->where('company_id',$user->company_id)->get();
+$nofitication=DB::table('users')->select(DB::raw('COUNT(*) as count'))->where('approval','<>','Approved')->where('company_id',$user->company_id)->where('company_id','!=',0)->get();
 @endphp
 <li class='nav-item'><a class='nav-link' href="{{ backpack_url('UserApproval') }}">
 	<i class='nav-icon la la-user'></i> User Approval
