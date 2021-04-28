@@ -8,7 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
 use App\Models\User;
-
+use DB;
 /**
  * Class CompanyCrudController
  * @package App\Http\Controllers\Admin
@@ -17,7 +17,7 @@ use App\Models\User;
 class CompanyCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    // use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
@@ -34,6 +34,11 @@ class CompanyCrudController extends CrudController
         CRUD::setEntityNameStrings('company', 'companies');
         $user = Auth::user();
         $this->crud->addClause('where', 'id', '=', $user->company_id);
+        $count = DB::table('companies')->select(DB::raw('COUNT(*) as counts'))->where('id',$user->company_id)->get();
+        // dd($count);
+        if($count[0]->counts>0){
+            CRUD::denyAccess('create');
+        }
     }
 
     /**
