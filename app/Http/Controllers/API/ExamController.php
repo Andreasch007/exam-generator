@@ -235,18 +235,18 @@ class ExamController extends BaseController
         // } else {
         $query = DB::table('users')
         ->select(DB::raw('COUNT(users.id) as totalemail'))
-        ->where('email',$input['email'])
+        ->where('email',$_POST['email'])
         ->first();
         if($query->totalemail>=1)
             {   
                 $query2 = DB::table('users')
                  ->select('name')
-                 ->where('email',$input['email'])
+                 ->where('email',$_POST['email'])
                  ->first();
                         
                 $data = array($query2->name);
                 Mail::send([],[], function($message) use($input) {
-                    $message->to($input['email'])
+                    $message->to($_POST['email'])
                             ->subject('Your New Password ')
                             ->setBody(
                                 '<html><h3>This is your New Password = </h3>
@@ -257,7 +257,7 @@ class ExamController extends BaseController
                     $message->from(env('MAIL_USERNAME','victoriussaputra@gmail.com'),'Victorius');
                 });
                 $update = DB::table('users')
-                ->where('email',$input['email'])
+                ->where('email',$_POST['email'])
                 ->update([
                             'password' => bcrypt('12345678')
                         ]);

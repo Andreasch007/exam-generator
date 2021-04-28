@@ -8,7 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
 use App\Models\User;
-
+use DB;
 /**
  * Class CompanyCrudController
  * @package App\Http\Controllers\Admin
