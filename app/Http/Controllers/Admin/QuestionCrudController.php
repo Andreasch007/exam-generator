@@ -167,8 +167,8 @@ class QuestionCrudController extends CrudController
                             'label' => 'Correct Ans',
                             'type'=> 'select_from_array',
                             'options' => [
-                                '0'  => 'false',
-                                '1'  => 'true',
+                                'false'  => 'false',
+                                'true'  => 'true',
                                
                             ],
                             'wrapperAttributes' => [
