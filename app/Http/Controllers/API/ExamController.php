@@ -152,6 +152,7 @@ class ExamController extends BaseController
                             ->join('users','exams.company_id','=','users.company_id')
                             ->select('exams.exam_rule')
                             ->where('users.email','=',$email)
+                            ->where('exams.id',$exam_id)
                             ->get();
             }
             return $this->sendResponse($examrule, 'Success');
