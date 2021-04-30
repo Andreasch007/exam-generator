@@ -240,6 +240,7 @@ class ExamCrudController extends CrudController
                 $questions->question_desc1 = $options->question_desc1;
                 $questions->question_desc2 = $options->question_desc2;
                 $questions->question_type = $options->question_type;
+                $questions->company_id = $user->company_id;
                 $questions->exam_id = $exam->id;
                 $questions->save();
             }
@@ -268,6 +269,7 @@ class ExamCrudController extends CrudController
                 $questions->question_desc1 = $options->question_desc1;
                 $questions->question_desc2 = $options->question_desc2;
                 $questions->question_type = $options->question_type;
+                $questions->company_id = $user->company_id;
                 $questions->exam_id = $exam->id;
                 $questions->save();
             }
