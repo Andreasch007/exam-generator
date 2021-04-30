@@ -154,7 +154,7 @@ class ExamController extends BaseController
                             ->where('users.email','=',$email)
                             ->get();
             }
-            return $this->sendResponse($exam, 'Success');
+            return $this->sendResponse($examrule, 'Success');
          }else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
