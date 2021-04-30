@@ -383,7 +383,7 @@ class ExamController extends BaseController
                             ->where('task_journal_questions.question_id',$question_id)
                             ->where('task_journal_answers.answer_id',$data)
                             ->update([
-                                'result'=>$result
+                                'result'=>$result,
                                 'task_journal_exams.flag_done'=> $flag
                             ]);
                         }
@@ -410,7 +410,7 @@ class ExamController extends BaseController
                     ->where('task_journal_questions.question_id',$question_id)
                     ->where('task_journal_answers.answer_id',$answers)
                     ->update([
-                        'result'=>$results
+                        'result'=>$results,
                         'task_journal_exams.flag_done'=> $flag
                     ]);
                 }            
