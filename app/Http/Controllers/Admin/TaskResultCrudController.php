@@ -147,7 +147,7 @@ class TaskResultCrudController extends CrudController
         ->join('answers','task_journal_answers.answer_id','answers.id')
         ->select('task_trans_headers.extern_no', 'exams.exam_name','task_journal_exams.created_at','questions.question_desc1','answers.answer_val','task_journal_answers.result')
         ->where('task_trans_headers.company_id',$user->company_id)
-        ->where('task_journal_answers.result','!=',null)
+        ->where('task_journal_answers.result','!=','')
         ->get();
    
 
