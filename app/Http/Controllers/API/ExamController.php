@@ -126,7 +126,8 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
-                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'))
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),
+                        DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'),'task_journal_exams.flag_done')
                         ->where('users.email','=',$email)
                         ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
@@ -344,13 +345,14 @@ class ExamController extends BaseController
     //     }
     // }
     public function updateResultJournal(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id'])){
+        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id']) && isset($_POST['flag'])){
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
             $question_id=$_POST['question_id'];
             $question_type=$_POST['question_type'];
             $answers=$_POST['answer'];
             $results=$_POST['result'];
+            $flag=$_POST['flag'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
             ->where('email',$email)
@@ -382,6 +384,7 @@ class ExamController extends BaseController
                             ->where('task_journal_answers.answer_id',$data)
                             ->update([
                                 'result'=>$result
+                                'task_journal_exams.flag_done'=> $flag
                             ]);
                         }
                     }
@@ -408,6 +411,7 @@ class ExamController extends BaseController
                     ->where('task_journal_answers.answer_id',$answers)
                     ->update([
                         'result'=>$results
+                        'task_journal_exams.flag_done'=> $flag
                     ]);
                 }            
             }

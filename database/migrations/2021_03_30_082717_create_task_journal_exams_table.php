@@ -20,6 +20,7 @@ class CreateTaskJournalExamsTable extends Migration
             $table->datetime('end_time', $precision = 0);
             $table->integer('user_id')->unsigned();
             $table->integer('header_id')->unsigned();
+            $table->integer('flag_done');
             $table->timestamps();
         });
     }
