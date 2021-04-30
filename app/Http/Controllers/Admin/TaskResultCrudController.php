@@ -29,7 +29,7 @@ class TaskResultCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\TaskHeader::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/taskresult');
-        CRUD::setEntityNameStrings('taskresult', 'task_results');
+        CRUD::setEntityNameStrings('taskresult', 'task results');
         CRUD::denyAccess(['delete','update','create']);
         CRUD::enableExportButtons();
     }

@@ -149,6 +149,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $examrule = DB::table('exams')
+                            ->join('users','exams.company_id','=','users.company_id')
                             ->select('exams.exam_rule')
                             ->where('users.email','=',$email)
                             ->get();
