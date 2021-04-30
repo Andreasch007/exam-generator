@@ -289,38 +289,6 @@ class ExamController extends BaseController
         { 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
-                        // try 
-                        // {
-                        //         $response = Password::sendResetLink(
-                        //             $request->only('email'), function (Message $message) {
-                        //                 $message->subject('Reset Password Confirmation Link');
-                        //             });
-                        // //         switch ($response) 
-                        // //         {
-                        // //             case Password::RESET_LINK_SENT: 
-                        // //                 $input['password'] = bcrypt($input['12345678']);
-                        // //                 $update = DB::table('users')
-                        // //                 ->where('email',$input['email'])
-                        // //                 ->update(
-                        // //                     ['password' => $input['password']]
-                        // //                 );
-                        // //             return $this->sendResponse($update, 'Check Your Email');
-                                    
-                        // //             case Password::INVALID_USER:
-                        // //             return \Response::json(array("status" => 400, "message" => trans($response), "data" => array()));
-                        // //         }
-                        // }   
-                        // catch (\Swift_TransportException $ex) 
-                        // {
-                        //     $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
-                        // } 
-                        // catch (Exception $ex) 
-                        // {
-                        //     $arr = array("status" => 400, "message" => $ex->getMessage(), "data" => []);
-                        // }
-                    // }
-                // }
-        // return \Response::json($arr);
                     
     }
 
@@ -391,6 +359,19 @@ class ExamController extends BaseController
                 if($question_type=='check'){
                     foreach($answers as $data){
                         foreach($results as $result){
+                            // Update Empty String
+                            $update = DB::table('task_journal_answers')
+                            ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
+                            ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                            ->join('users','task_journal_exams.user_id','=','users.id')
+                            ->where('users.email',$email)
+                            ->where('task_journal_exams.exam_id',$exam_id)
+                            ->where('task_journal_questions.question_id',$question_id)
+                            // ->where('task_journal_answers.answer_id',$data)
+                            ->update([
+                                'result'=>''
+                            ]);
+
                             $update = DB::table('task_journal_answers')
                             ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                             ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
@@ -405,6 +386,18 @@ class ExamController extends BaseController
                         }
                     }
                 }else {
+                    $update = DB::table('task_journal_answers')
+                    ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
+                    ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
+                    ->join('users','task_journal_exams.user_id','=','users.id')
+                    ->where('users.email',$email)
+                    ->where('task_journal_exams.exam_id',$exam_id)
+                    ->where('task_journal_questions.question_id',$question_id)
+                    // ->where('task_journal_answers.answer_id',$data)
+                    ->update([
+                        'result'=>''
+                    ]);
+
                     $update = DB::table('task_journal_answers')
                     ->join('task_journal_questions','task_journal_answers.hdr_qid','=','task_journal_questions.id')
                     ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
