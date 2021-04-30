@@ -126,9 +126,9 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
-                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 'exams.exam_rule')
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'))
                         ->where('users.email','=',$email)
-                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }
@@ -137,6 +137,26 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
         
+    }
+
+    public function getExamRule(Request $request){
+        if(isset($_POST['email']) && isset($_POST['exam_id'])){
+            $email = $_POST['email'];
+            $exam_id=$_POST['exam_id'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'))
+                    ->where('email',$email)
+                    ->first();
+            if($query->totalemail>=1){
+                $examrule = DB::table('exams')
+                            ->select('exams.exam_rule')
+                            ->where('users.email','=',$email)
+                            ->get();
+            }
+            return $this->sendResponse($exam, 'Success');
+         }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
     }
 
     public function getQuestion(Request $request){

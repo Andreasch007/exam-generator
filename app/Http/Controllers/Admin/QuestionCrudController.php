@@ -32,7 +32,8 @@ class QuestionCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Question::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/question');
-        CRUD::setEntityNameStrings('question', 'questions');
+        CRUD::setEntityNameStrings('Answer', 'Answers');
+        CRUD::denyAccess('create');
         $this->crud->orderBy('exam_id', 'ASC');
         $this->crud->orderBy('question_no', 'ASC');
         $user = Auth::user();
@@ -128,21 +129,54 @@ class QuestionCrudController extends CrudController
                         'radio' => 'radio'
                     ],
                 ],
-                [   // Table
+                [   
                     'name'            => 'answers',
                     'label'           => 'Answer',
-                    'type'            => 'table',
-                    'entity_singular' => 'answer', // used on the "Add X" button
-                    // 'model'           => "App\Models\Question",
-                    'columns'         => [
-                        'answer_no'     => 'No',
-                        'answer_desc1'  => 'Description1',
-                        'answer_desc2'  => 'Description2',
-                        // 'answer_val'  => 'Value'
-                    ],
-                    'max' => 4, // maximum rows allowed in the table
-                    'min' => 0, // minimum rows allowed in the table
-                ],
+                    'type'            => 'repeatable',
+                    'fields'         => [
+                        [
+                            'name'     => 'answer_no',
+                            'label' => 'No',
+                            'type'=> 'number',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-2'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_desc1',
+                            'label' => 'Ans. Desc1',
+                            'type'=> 'text',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-4'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_desc2',
+                            'label' => 'Ans. Desc2',
+                            'type'=> 'text',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-4'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_val',
+                            'label' => 'Correct Ans',
+                            'type'=> 'select_from_array',
+                            'options' => [
+                                '0'  => 'false',
+                                '1'  => 'true',
+                               
+                            ],
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-2'
+                              ],
+                        ],
+                    ]
+                ]
                 
             ]);
     }
@@ -183,22 +217,54 @@ class QuestionCrudController extends CrudController
                         'radio' => 'radio'
                     ],
                 ],
-                [   // Table
+                [   
                     'name'            => 'answers',
                     'label'           => 'Answer',
-                    'type'            => 'table',
-                    'entity_singular' => 'answer', // used on the "Add X" button
-                    // 'model'           => "App\Models\Question",
-                    'columns'         => [
-                        'answer_no'     => 'No',
-                        'answer_desc1'  => 'Description1',
-                        'answer_desc2'  => 'Description2',
-                        // 'answer_val'    => 'Value',
-                    ],
-                    // 'value'          => 
-                    'max' => 4, // maximum rows allowed in the table
-                    'min' => 0, // minimum rows allowed in the table
-                ],
+                    'type'            => 'repeatable',
+                    'fields'         => [
+                        [
+                            'name'     => 'answer_no',
+                            'label' => 'No',
+                            'type'=> 'number',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-sm-2'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_desc1',
+                            'label' => 'Ans. Desc1',
+                            'type'=> 'text',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-4'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_desc2',
+                            'label' => 'Ans. Desc2',
+                            'type'=> 'text',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-4'
+                              ],
+                        ],
+                        [
+                            'name'     => 'answer_val',
+                            'label' => 'Correct Ans',
+                            'type'=> 'select_from_array',
+                            'options' => [
+                                '0'  => 'false',
+                                '1'  => 'true',
+                               
+                            ],
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-2'
+                              ],
+                        ],
+                    ]
+                ]
                 
             ]);
     }
@@ -223,7 +289,7 @@ class QuestionCrudController extends CrudController
                 $answers->answer_no = $options->answer_no;
                 $answers->answer_desc2 = $options->answer_desc1;
                 $answers->answer_val = $options->answer_desc2;
-                // $answers->answer_val = $options->answer_val;
+                $answers->answer_val = $options->answer_val;
                 $answers->question_id = $question->id;
                 $answers->save();
             }
@@ -256,7 +322,7 @@ class QuestionCrudController extends CrudController
                 $answer->answer_no = $options->answer_no;
                 $answer->answer_desc1 = $options->answer_desc1;
                 $answer->answer_desc2 = $options->answer_desc2;
-                // $answer->answer_val = $options->answer_val;
+                $answer->answer_val = $options->answer_val;
                 $answer->question_id = $question->id;
                 $answer->save();
             }

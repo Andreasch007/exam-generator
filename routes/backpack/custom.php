@@ -25,8 +25,8 @@ Route::group([
     Route::crud('journalexam', 'JournalExamCrudController');
     Route::POST('generate/{id}','TaskHeaderCrudController@generateTransaction');
 
+    Route::crud('taskresult', 'TaskResultCrudController');
 }); // this should be the absolute last line of this file
-
 Route::group(
     [
         'namespace'  => 'App\Http\Controllers',

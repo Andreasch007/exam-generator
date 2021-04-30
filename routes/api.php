@@ -22,6 +22,7 @@ Route::post('register', 'App\Http\Controllers\API\RegisterController@register');
 Route::post('login', 'App\Http\Controllers\API\RegisterController@login');
 Route::post('category', 'App\Http\Controllers\API\ExamController@getCategory');
 Route::post('exam','App\Http\Controllers\API\ExamController@getExam');
+Route::post('examrule','App\Http\Controllers\API\ExamController@getExamRule');
 Route::post('questionanswer','App\Http\Controllers\API\ExamController@getQuestion');
 Route::post('edit-profile','App\Http\Controllers\API\ExamController@getProfile');
 Route::post('company','App\Http\Controllers\API\ExamController@getCompany');
