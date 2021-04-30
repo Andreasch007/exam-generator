@@ -253,7 +253,7 @@ class ExamCrudController extends CrudController
     {
         $input = $request->all();
         $option = json_decode($input['questions']);
-
+        $user = Auth::user();
         $exam = Exam::where('id',$id)->first();
         $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
