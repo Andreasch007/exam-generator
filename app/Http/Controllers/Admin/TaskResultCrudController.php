@@ -63,6 +63,12 @@ class TaskResultCrudController extends CrudController
                 'searchlable'   => true
             ],
             [
+                'label'    =>  'User',
+                'name'     =>  'user_name',
+                'type'     =>  'text',
+                'limit'    => 2000
+            ],
+            [
                 'label'    =>  'Exam',
                 'name'     =>  'exam_name',
                 'type'     =>  'text',
@@ -145,7 +151,8 @@ class TaskResultCrudController extends CrudController
         ->join('questions','task_journal_questions.question_id','questions.id')
         ->join('task_journal_answers','task_journal_questions.id','=','task_journal_answers.hdr_qid')
         ->join('answers','task_journal_answers.answer_id','answers.id')
-        ->select('task_trans_headers.extern_no', 'exams.exam_name','task_journal_exams.created_at','questions.question_desc1','answers.answer_val','task_journal_answers.result')
+        ->join('users','task_journal_exams.user_id','users.id')
+        ->select('task_trans_headers.extern_no', 'exams.exam_name','task_journal_exams.created_at','questions.question_desc1','answers.answer_val','task_journal_answers.result', 'users.name as user_name')
         ->where('task_trans_headers.company_id',$user->company_id)
         ->where('task_journal_answers.result','!=','')
         ->get();
