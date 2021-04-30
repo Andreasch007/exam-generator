@@ -273,13 +273,14 @@ class QuestionCrudController extends CrudController
     {
         $input = $request->all();
         $option = json_decode($input['answers']);
-
+        $user = Auth::user();
         $question = new Question();
         $question->question_no = $input['question_no'];
         // $question->category_id = $input['category_id'];
         $question->question_desc1 = $input['question_desc1'];
         $question->question_desc2 = $input['question_desc2'];
         $question->question_type = $input['question_type'];
+        $question->company_id = $user->company_id;
         // $question->option_id = $input['option_id'];
         $question->save();
 
@@ -302,7 +303,7 @@ class QuestionCrudController extends CrudController
     {
         $input = $request->all();
         $option = json_decode($input['answers']);
-        print_r($option);
+        $user = Auth::user();
 
 
 
@@ -312,6 +313,7 @@ class QuestionCrudController extends CrudController
         $question->question_desc1 = $input['question_desc1'];
         $question->question_desc2 = $input['question_desc2'];
         $question->question_type = $input['question_type'];
+        $question->company_id = $user->company_id;
         $question->save();  
 
         Answer::where('question_id',$id)->delete();
