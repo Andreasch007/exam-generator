@@ -55,11 +55,11 @@ class ExamCrudController extends CrudController
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
         CRUD::addColumns([
-            [
-               'label' =>  'No',
-               'name'  =>  'exam_no',
-               'type'  =>  'number'
-            ],
+            // [
+            //    'label' =>  'No',
+            //    'name'  =>  'exam_no',
+            //    'type'  =>  'number'
+            // ],
             [
                'label' => 'Category',
                'name'  => 'category_id',
@@ -96,11 +96,11 @@ class ExamCrudController extends CrudController
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
         CRUD::addFields([
-            [
-                'label'     => 'No',
-                'name'      => 'exam_no',
-                'type'      => 'number',
-            ],
+            // [
+            //     'label'     => 'No',
+            //     'name'      => 'exam_no',
+            //     'type'      => 'number',
+            // ],
             [
                 'label'     => 'Exam Name',
                 'name'      => 'exam_name',
@@ -146,16 +146,16 @@ class ExamCrudController extends CrudController
                 'label'           => 'Question',
                 'type'            => 'repeatable',
                 'fields'         => [
-                    [
-                        'name'     => 'question_no',
-                        'label' => 'No',
-                        'type'=> 'number',
-                        // 'model'     => "App\Models\User",
-                        // 'attribute' =>  'name',
-                        'wrapperAttributes' => [
-                            'class' => 'form-group col-md-2'
-                          ],
-                    ],
+                    // [
+                    //     'name'     => 'question_no',
+                    //     'label' => 'No',
+                    //     'type'=> 'number',
+                    //     // 'model'     => "App\Models\User",
+                    //     // 'attribute' =>  'name',
+                    //     'wrapperAttributes' => [
+                    //         'class' => 'form-group col-md-2'
+                    //       ],
+                    // ],
                     [
                         'name'     => 'question_desc1',
                         'label' => 'Q. Desc1',
@@ -225,7 +225,7 @@ class ExamCrudController extends CrudController
         // print_r($option);
         $user = Auth::user();
         $exam = new Exam();
-        $exam->exam_no = $input['exam_no'];
+        // $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
         $exam->exam_name = $input['exam_name'];
         $exam->exam_rule = $input['exam_rule'];
@@ -255,7 +255,7 @@ class ExamCrudController extends CrudController
         $option = json_decode($input['questions']);
         $user = Auth::user();
         $exam = Exam::where('id',$id)->first();
-        $exam->exam_no = $input['exam_no'];
+        // $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
         $exam->exam_rule = $input['exam_rule'];
         $exam->exam_name = $input['exam_name'];
@@ -265,7 +265,7 @@ class ExamCrudController extends CrudController
         if($option!=''){
             foreach($option as $options){
                 $questions = new Question();
-                $questions->question_no = $options->question_no;
+                // $questions->question_no = $options->question_no;
                 $questions->question_desc1 = $options->question_desc1;
                 $questions->question_desc2 = $options->question_desc2;
                 $questions->question_type = $options->question_type;
