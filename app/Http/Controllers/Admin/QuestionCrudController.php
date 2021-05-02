@@ -65,11 +65,11 @@ class QuestionCrudController extends CrudController
                 'attribute' => 'exam_name',
                 'model' => 'App\Models\Exam',
              ],
-            //  [
-            //     'label' =>  'No',
-            //     'name'  =>  'question_no',
-            //     'type'  =>  'number',
-            //  ],
+             [
+                'label' =>  'No',
+                'name'  =>  'question_no',
+                'type'  =>  'number',
+             ],
              [
                 'label' =>  'Desc1',
                 'name'  =>  'question_desc1',
@@ -105,7 +105,7 @@ class QuestionCrudController extends CrudController
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
-        // CRUD::field('question_no')->type('number');
+        CRUD::field('question_no')->type('number');
 
         CRUD::addFields(
             [
@@ -134,16 +134,16 @@ class QuestionCrudController extends CrudController
                     'label'           => 'Answer',
                     'type'            => 'repeatable',
                     'fields'         => [
-                        // [
-                        //     'name'     => 'answer_no',
-                        //     'label' => 'No',
-                        //     'type'=> 'number',
-                        //     // 'model'     => "App\Models\User",
-                        //     // 'attribute' =>  'name',
-                        //     'wrapperAttributes' => [
-                        //         'class' => 'form-group col-md-2'
-                        //       ],
-                        // ],
+                        [
+                            'name'     => 'answer_no',
+                            'label' => 'No',
+                            'type'=> 'number',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-md-2'
+                              ],
+                        ],
                         [
                             'name'     => 'answer_desc1',
                             'label' => 'Ans. Desc1',
@@ -193,7 +193,7 @@ class QuestionCrudController extends CrudController
         CRUD::setValidation(QuestionRequest::class);
 
         
-        // CRUD::field('question_no')->type('number');
+        CRUD::field('question_no')->type('number');
 
         CRUD::addFields(
             [
@@ -222,16 +222,16 @@ class QuestionCrudController extends CrudController
                     'label'           => 'Answer',
                     'type'            => 'repeatable',
                     'fields'         => [
-                        // [
-                        //     'name'     => 'answer_no',
-                        //     'label' => 'No',
-                        //     'type'=> 'number',
-                        //     // 'model'     => "App\Models\User",
-                        //     // 'attribute' =>  'name',
-                        //     'wrapperAttributes' => [
-                        //         'class' => 'form-group col-sm-2'
-                        //       ],
-                        // ],
+                        [
+                            'name'     => 'answer_no',
+                            'label' => 'No',
+                            'type'=> 'number',
+                            // 'model'     => "App\Models\User",
+                            // 'attribute' =>  'name',
+                            'wrapperAttributes' => [
+                                'class' => 'form-group col-sm-2'
+                              ],
+                        ],
                         [
                             'name'     => 'answer_desc1',
                             'label' => 'Ans. Desc1',
@@ -275,7 +275,7 @@ class QuestionCrudController extends CrudController
         $option = json_decode($input['answers']);
         $user = Auth::user();
         $question = new Question();
-        // $question->question_no = $input['question_no'];
+        $question->question_no = $input['question_no'];
         // $question->category_id = $input['category_id'];
         $question->question_desc1 = $input['question_desc1'];
         $question->question_desc2 = $input['question_desc2'];
@@ -287,7 +287,7 @@ class QuestionCrudController extends CrudController
         if($option!=''){
             foreach($option as $options){
                 $answers = new Answer();
-                // $answers->answer_no = $options->answer_no;
+                $answers->answer_no = $options->answer_no;
                 $answers->answer_desc2 = $options->answer_desc1;
                 $answers->answer_val = $options->answer_desc2;
                 $answers->answer_val = $options->answer_val;
@@ -308,7 +308,7 @@ class QuestionCrudController extends CrudController
 
 
         $question = Question::where('id',$id)->first();
-        // $question->question_no = $input['question_no'];
+        $question->question_no = $input['question_no'];
         // $question->category_id = $input['category_id'];
         $question->question_desc1 = $input['question_desc1'];
         $question->question_desc2 = $input['question_desc2'];
@@ -321,7 +321,7 @@ class QuestionCrudController extends CrudController
         if($option!=''){
             foreach($option as $options){
                 $answer = new Answer();
-                // $answer->answer_no = $options->answer_no;
+                $answer->answer_no = $options->answer_no;
                 $answer->answer_desc1 = $options->answer_desc1;
                 $answer->answer_desc2 = $options->answer_desc2;
                 $answer->answer_val = $options->answer_val;
