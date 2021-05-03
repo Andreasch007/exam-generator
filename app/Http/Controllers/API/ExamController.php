@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\UserApproval;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
@@ -113,8 +114,33 @@ class ExamController extends BaseController
                 return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
             } 
         }
-    }  
+    }
 
+    public function sendApproval(Request $request){
+        if(isset($_POST['email']) && isset($_POST['company_id'])){
+            $email = $_POST['email'];
+            $company_id = $_POST['company_id'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'),'id','company_id')
+                    ->where('email',$email)
+                    ->groupBy('id','company_id')
+                    ->first();
+            $check = DB::table('user_approvals')
+                     ->select(DB::raw('COUNT(id) as totalapproval'))
+                     ->where('user_id',$query->id)
+                     ->where('company_id',$company_id)
+                     ->first();
+            if($query->totalemail>=1){
+                if($check->totalapproval==0){
+                    $update = UserApproval::create([
+                                'company_id'=>$company_id,
+                                'user_id'=>$query->id
+                            ]);
+                }
+            }
+        }
+    }
+        
 
     public function getExam(Request $request){
         if(isset($_POST['email'])){
@@ -231,14 +257,6 @@ class ExamController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         $input=$request->all();
-        // $email = $_POST['email'];
-        // $rules = array(
-        //     'email' => "required|email",
-        // );
-        // $validator = Validator::make($input, $rules);
-        // if ($validator->fails()) {
-        //     $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
-        // } else {
         $query = DB::table('users')
         ->select(DB::raw('COUNT(users.id) as totalemail'))
         ->where('email',$input['email'])

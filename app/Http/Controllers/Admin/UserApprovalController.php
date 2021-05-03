@@ -30,7 +30,7 @@ class UserApprovalController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\User::class);
+        CRUD::setModel(\App\Models\UserApproval::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/UserApproval');
         CRUD::setEntityNameStrings('UserApproval', 'User Approval');
        
@@ -55,10 +55,10 @@ class UserApprovalController extends CrudController
             [
                 'label' => 'User',
                 'name'  => 'name',
-             //    'entity'   =>  'user',
-             //    'attribute'=>  'name',
-             //    'model' => 'App\Models\User',
-                'type'  => 'text',
+                'entity'   =>  'user',
+                'attribute'=>  'name',
+                'model' => 'App\Models\User',
+                'type'  => 'select',
                 'limit' => 150,
              ],
              [
@@ -99,16 +99,18 @@ class UserApprovalController extends CrudController
 
         // CRUD::setFromDb(); // fields
         CRUD::addFields([
-            
             [
                 'label' => 'User',
-                'name'  => 'name',
-                'type'  => 'text',
+                'name'  => 'user_id',
+                'type'  =>  'select',
+                'entity'   =>  'user',
+                'attribute'=>  'name',
+                'model' => 'App\Models\User',
                 'attributes' => [
-                    'readonly'  =>  'readonly'
-                ],
+                 'readonly'  =>  'readonly'
+                 ],
                 'limit' => 150,
-            ],
+             ],
             [
                'label' => 'Company',
                'name'  => 'company_id',
@@ -118,7 +120,7 @@ class UserApprovalController extends CrudController
                'model' => 'App\Models\Company',
                'attributes' => [
                 'readonly'  =>  'readonly'
-            ],
+                ],
                'limit' => 150,
             ],
             [

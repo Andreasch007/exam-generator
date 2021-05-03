@@ -16,7 +16,7 @@ class UserApproval extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'companies';
+    protected $table = 'user_approvals';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -29,6 +29,28 @@ class UserApproval extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function changeColor()
+    {       
+    //     $data = DB::table('companies')
+    //     ->select('approval')
+    //     ->get();
+        
+    // foreach ($data as $datas)
+    //     {
+            if($this->approval == 'Approved')
+            {
+                return "<span class='badge' style='background-color:green; color: white;'>".$this->approval."</span>";
+            }
+            else 
+            {
+                return "<span class='badge' style='background-color:orange; color: white;'>".$this->approval."</span>";
+            }
+        // echo $data;
+
+        
+         //return '<span style="color:red">'.$this->approval.'<span>'>'.';
+        // }
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -36,6 +58,10 @@ class UserApproval extends Model
     */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function company(){
+        return $this->belongsTo(Company::class);
     }
 
 

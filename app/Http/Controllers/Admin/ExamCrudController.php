@@ -194,7 +194,7 @@ class ExamCrudController extends CrudController
                     [   // CustomHTML
                         'name'  => 'separator',
                         'type'  => 'custom_html',
-                        'value' => '<a href="{{$this->crud->setEditView(`backpack::crud.question`,3);}}" target="_blank">Go to question ></a>'
+                        'value' => '<a href="{{backpack_url(`question`)}}" target="_blank">Go to question ></a>'
                     ],
 
                     
