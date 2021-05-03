@@ -75,7 +75,10 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
 
-                $company = Company::all();
+                $company = DB::table('companies')
+                           ->select('companies.*')
+                           ->distinct()
+                           ->get();
                 
                 // $query2 = DB::table('users')
                 //     ->select('company_id','name')
