@@ -130,8 +130,10 @@ class ExamController extends BaseController
                     ->groupBy('id','company_id')
                     ->first();
             $check = DB::table('user_approvals')
-                     ->select(DB::raw('COUNT(id) as totalapproval'))
+                     ->join('users','user_approvals.user_id','=','users.id')
+                     ->select(DB::raw('COUNT(id) as totalapproval'),'users.email')
                      ->where('user_id',$query->id)
+                     ->where('users.email',$email)
                      ->where('company_id',$company_id)
                      ->first();
             if($query->totalemail>=1){
