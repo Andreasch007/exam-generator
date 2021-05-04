@@ -76,8 +76,10 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
 
                 $company = DB::table('companies')
+                           ->join('users','companies.user_id','=','users.id')
                            ->leftjoin('user_approvals','companies.id','=','user_approvals.company_id')
-                           ->select('companies.*','user_approvals.approval')
+                           ->select('companies.*','user_approvals.approval','users.email')
+                           ->where('users.email',$email)
                            ->distinct()
                            ->get();
                 
@@ -131,9 +133,8 @@ class ExamController extends BaseController
                     ->first();
             $check = DB::table('user_approvals')
                      ->join('users','user_approvals.user_id','=','users.id')
-                     ->select(DB::raw('COUNT(id) as totalapproval'),'users.email')
+                     ->select(DB::raw('COUNT(id) as totalapproval'))
                      ->where('user_id',$query->id)
-                     ->where('users.email',$email)
                      ->where('company_id',$company_id)
                      ->first();
             if($query->totalemail>=1){
