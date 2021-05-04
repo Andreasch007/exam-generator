@@ -18,6 +18,7 @@ class CreateUserApprovalsTable extends Migration
             $table->integer('user_id');
             $table->integer('company_id');
             $table->timestamps();
+            $table->enum('approval',['Need Approval','Approved']);
         });
     }
 

@@ -19,7 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->boolean('approved')->default(0);
             $table->timestamps();
-            $table->string('company');
+            $table->string('company')->nullable();
             // $table->enum('approval',['Need Approval','Approved']);
         });
     }

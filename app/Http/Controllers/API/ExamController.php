@@ -77,7 +77,7 @@ class ExamController extends BaseController
 
                 $company = DB::table('companies')
                            ->leftjoin('user_approvals','companies.id','=','user_approvals.company_id')
-                           ->select('companies.*,user_approvals.approval')
+                           ->select('companies.*','user_approvals.approval')
                            ->distinct()
                            ->get();
                 

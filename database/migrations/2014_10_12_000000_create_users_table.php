@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('company_id')->unsigned()->nullable();
             $table->enum('approval',['Need Approval','Approved']);
-            $table->string('player_id');
+            $table->string('player_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
