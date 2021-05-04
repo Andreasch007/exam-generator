@@ -76,10 +76,7 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
 
                 $company = DB::table('companies')
-                        //    ->join('users','companies.user_id','=','users.id')
-                           ->leftjoin('user_approvals','companies.id','=','user_approvals.company_id')
-                           ->select('companies.*','user_approvals.approval')
-                        //    ->where('users.email',$email)
+                           ->select('companies.*')
                            ->distinct()
                            ->get();
                 
@@ -132,17 +129,33 @@ class ExamController extends BaseController
                     ->groupBy('id','company_id')
                     ->first();
             $check = DB::table('user_approvals')
-                     ->join('users','user_approvals.user_id','=','users.id')
                      ->select(DB::raw('COUNT(id) as totalapproval'))
                      ->where('user_id',$query->id)
                      ->where('company_id',$company_id)
                      ->first();
+            $check_company = DB::table('user_approvals')
+                        //   ->join('users','user_approvals.user_id','=','users.id')
+                          ->select('company_id')
+                          ->where('user_id',$query->id)
+                          ->get();
             if($query->totalemail>=1){
-                if($check->totalapproval==0){
-                    $update = UserApproval::create([
-                                'company_id'=>$company_id,
-                                'user_id'=>$query->id
-                            ]);
+                if($check_company <> $company_id)
+                {
+                    if($check->totalapproval==0){
+                        $update = UserApproval::create([
+                                    'company_id'=>$company_id,
+                                    'user_id'=>$query->id
+                                ]);
+                    return $this->sendResponse($update, 'Success');
+                    }
+                }
+                else
+                {
+                    $response = array("error" => FALSE);
+                    $response["error"] = TRUE;
+                    $response["message"] = 'Company already existed';
+
+                    return json_encode($response);
                 }
             }
         }
