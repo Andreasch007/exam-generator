@@ -28,6 +28,7 @@ Route::post('updateflagdone','App\Http\Controllers\API\ExamController@updateFlag
 Route::post('edit-profile','App\Http\Controllers\API\ExamController@getProfile');
 Route::post('company','App\Http\Controllers\API\ExamController@getCompany');
 Route::post('sendapproval','App\Http\Controllers\API\ExamController@sendApproval');
+Route::post('getapproval','App\Http\Controllers\API\ExamController@getUserApproval');
 Route::post('updatejournal','App\Http\Controllers\API\ExamController@updateResultJournal');
 Route::post('save-data','App\Http\Controllers\API\ExamController@updateCompany');
 Route::post('forgotpassword','App\Http\Controllers\API\ExamController@forgotPassword');

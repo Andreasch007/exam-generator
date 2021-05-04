@@ -137,19 +137,18 @@ class QuestionCrudController extends CrudController
                         [
                             'name'     => 'answer_no',
                             'label' => 'No',
-                            'type'=> 'number',
-                            // 'model'     => "App\Models\User",
-                            // 'attribute' =>  'name',
+                            'type'=> 'number_increment',
+                            'attributes' =>  [
+                                'readonly'=>'readonly',
+                            ],
                             'wrapperAttributes' => [
-                                'class' => 'form-group col-md-2'
-                              ],
+                                'class' => 'increment form-group col-md-2'
+                            ],
                         ],
                         [
                             'name'     => 'answer_desc1',
                             'label' => 'Ans. Desc1',
                             'type'=> 'text',
-                            // 'model'     => "App\Models\User",
-                            // 'attribute' =>  'name',
                             'wrapperAttributes' => [
                                 'class' => 'form-group col-md-4'
                               ],
@@ -226,18 +225,17 @@ class QuestionCrudController extends CrudController
                             'name'     => 'answer_no',
                             'label' => 'No',
                             'type'=> 'number',
-                            // 'model'     => "App\Models\User",
-                            // 'attribute' =>  'name',
+                            'attributes' =>  [
+                                'readonly'=>'readonly',
+                            ],
                             'wrapperAttributes' => [
-                                'class' => 'form-group col-sm-2'
+                                'class' => 'increment form-group col-sm-2'
                               ],
                         ],
                         [
                             'name'     => 'answer_desc1',
                             'label' => 'Ans. Desc1',
                             'type'=> 'text',
-                            // 'model'     => "App\Models\User",
-                            // 'attribute' =>  'name',
                             'wrapperAttributes' => [
                                 'class' => 'form-group col-md-4'
                               ],
