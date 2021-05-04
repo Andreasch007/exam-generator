@@ -65,11 +65,11 @@ class QuestionCrudController extends CrudController
                 'attribute' => 'exam_name',
                 'model' => 'App\Models\Exam',
              ],
-             [
-                'label' =>  'No',
-                'name'  =>  'question_no',
-                'type'  =>  'number',
-             ],
+            //  [
+            //     'label' =>  'No',
+            //     'name'  =>  'question_no',
+            //     'type'  =>  'number',
+            //  ],
              [
                 'label' =>  'Desc1',
                 'name'  =>  'question_desc1',

@@ -172,7 +172,7 @@ class ExamController extends BaseController
                 $userapproval = DB::table('user_approvals')
                                 ->join('companies','user_approvals.company_id','companies.id')
                                 ->join('users','user_approvals.user_id','users.id')
-                                ->select('users.id','companies.name')
+                                ->select('users.id','companies.name','user_approvals.approval')
                                 ->where('users.email',$email)
                                 ->get();
             }

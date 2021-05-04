@@ -27,7 +27,7 @@ class ExamRequest extends FormRequest
     {
         return [
             'exam_name' => 'required|max:255',
-            'exam_no'   => 'required',
+            // 'exam_no'   => 'required',
             'category_id'=> 'required',
 
         ];
