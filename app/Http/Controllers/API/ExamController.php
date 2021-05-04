@@ -155,7 +155,31 @@ class ExamController extends BaseController
                     }
                 
             }
-        }
+            return $this->sendResponse($update, 'Success');
+        }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
+
+    public function getUserApproval(){
+        if(isset($_POST['email'])){
+            $email = $_POST['email'];
+            $query = DB::table('users')
+            ->select(DB::raw('COUNT(users.id) as totalemail'))
+            ->where('email',$email)
+            ->first();
+            if($query->totalemail>=1){
+                $userapproval = DB::table('user_approvals')
+                                ->join('companies','user_approvals.company_id','companies.id')
+                                ->join('users','user_approvals.user_id','users.id')
+                                ->select('users.id','companies.name')
+                                ->where('users.email',$email)
+                                ->get();
+            }
+            return $this->sendResponse($userapproval, 'Success');
+        }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
     }
         
 

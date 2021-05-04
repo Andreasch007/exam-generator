@@ -55,11 +55,11 @@ class ExamCrudController extends CrudController
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
         CRUD::addColumns([
-            [
-               'label' =>  'No',
-               'name'  =>  'exam_no',
-               'type'  =>  'number'
-            ],
+            // [
+            //    'label' =>  'No',
+            //    'name'  =>  'exam_no',
+            //    'type'  =>  'number'
+            // ],
             [
                'label' => 'Category',
                'name'  => 'category_id',
@@ -96,11 +96,11 @@ class ExamCrudController extends CrudController
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
         CRUD::addFields([
-            [
-                'label'     => 'No',
-                'name'      => 'exam_no',
-                'type'      => 'number',
-            ],
+            // [
+            //     'label'     => 'No',
+            //     'name'      => 'exam_no',
+            //     'type'      => 'number',
+            // ],
             [
                 'label'     => 'Exam Name',
                 'name'      => 'exam_name',
@@ -149,19 +149,19 @@ class ExamCrudController extends CrudController
                     [
                         'name'     => 'question_no',
                         'label' => 'No',
-                        'type'=> 'number',
-                        // 'model'     => "App\Models\User",
-                        // 'attribute' =>  'name',
+                        'type'=> 'number_increment',
+                        'attributes' =>  [
+                            'readonly'=>'readonly',
+                        ],
+                        
                         'wrapperAttributes' => [
-                            'class' => 'form-group col-md-2'
+                            'class' => 'increment form-group col-md-2',
                           ],
                     ],
                     [
                         'name'     => 'question_desc1',
                         'label' => 'Q. Desc1',
                         'type'=> 'text',
-                        // 'model'     => "App\Models\User",
-                        // 'attribute' =>  'name',
                         'wrapperAttributes' => [
                             'class' => 'form-group col-md-4'
                           ],
@@ -170,8 +170,6 @@ class ExamCrudController extends CrudController
                         'name'     => 'question_desc2',
                         'label' => 'Q. Desc2',
                         'type'=> 'text',
-                        // 'model'     => "App\Models\User",
-                        // 'attribute' =>  'name',
                         'wrapperAttributes' => [
                             'class' => 'form-group col-md-4'
                           ],
@@ -185,8 +183,6 @@ class ExamCrudController extends CrudController
                             'check' => 'check',
                             'radio' => 'radio'
                         ],
-                        // 'model'     => "App\Models\Question",
-                        // 'attribute' =>  'name',
                         'wrapperAttributes' => [
                             'class' => 'form-group col-md-2'
                           ],
@@ -225,7 +221,7 @@ class ExamCrudController extends CrudController
         // print_r($option);
         $user = Auth::user();
         $exam = new Exam();
-        $exam->exam_no = $input['exam_no'];
+        // $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
         $exam->exam_name = $input['exam_name'];
         $exam->exam_rule = $input['exam_rule'];
@@ -255,7 +251,7 @@ class ExamCrudController extends CrudController
         $option = json_decode($input['questions']);
         $user = Auth::user();
         $exam = Exam::where('id',$id)->first();
-        $exam->exam_no = $input['exam_no'];
+        // $exam->exam_no = $input['exam_no'];
         $exam->category_id = $input['category_id'];
         $exam->exam_rule = $input['exam_rule'];
         $exam->exam_name = $input['exam_name'];
