@@ -15,8 +15,8 @@ class CreateUserApprovalsTable extends Migration
     {
         Schema::create('user_approvals', function (Blueprint $table) {
             $table->id();
-            $table->int('user_id');
-            $table->int('company_id');
+            $table->integer('user_id');
+            $table->integer('company_id');
             $table->timestamps();
         });
     }

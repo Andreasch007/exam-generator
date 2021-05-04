@@ -76,7 +76,8 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
 
                 $company = DB::table('companies')
-                           ->select('companies.*')
+                           ->leftjoin('user_approvals','companies.id','=','user_approvals.company_id')
+                           ->select('companies.*,user_approvals.approval')
                            ->distinct()
                            ->get();
                 
