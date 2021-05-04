@@ -132,31 +132,28 @@ class ExamController extends BaseController
                      ->select(DB::raw('COUNT(id) as totalapproval'))
                      ->where('user_id',$query->id)
                      ->where('company_id',$company_id)
+                    //  ->groupBy('id','company_id')
                      ->first();
-            $check_company = DB::table('user_approvals')
-                        //   ->join('users','user_approvals.user_id','=','users.id')
-                          ->select('company_id')
-                          ->where('user_id',$query->id)
-                          ->get();
             if($query->totalemail>=1){
-                if($check_company <> $company_id)
-                {
                     if($check->totalapproval==0){
                         $update = UserApproval::create([
                                     'company_id'=>$company_id,
                                     'user_id'=>$query->id
                                 ]);
-                    return $this->sendResponse($update, 'Success');
+                        $response = array("error" => true);
+                        $response["error"] = FALSE;
+                        $response["message"] = "Request Success !";
+                    
+                        return json_encode($response); 
                     }
-                }
-                else
-                {
-                    $response = array("error" => FALSE);
-                    $response["error"] = TRUE;
-                    $response["message"] = 'Company already existed';
-
-                    return json_encode($response);
-                }
+                    else{
+                        $response = array("error" => FALSE);
+                        $response["error"] = TRUE;
+                        $response["message"] = "You have already requested to follow for this company";
+    
+                        return json_encode($response);
+                    }
+                
             }
         }
     }
