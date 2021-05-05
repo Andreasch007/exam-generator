@@ -125,7 +125,7 @@ class ExamCrudController extends CrudController
             [
                 'label'     => 'Rule',
                 'name'      => 'exam_rule',
-                'type'      => 'textarea'
+                'type'      => 'wysiwyg'
             ],
             // [   // Table
             //     'name'            => 'questions',
