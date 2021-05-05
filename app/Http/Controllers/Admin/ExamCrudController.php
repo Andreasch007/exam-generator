@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Exam;
 use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 /**
  * Class ExamCrudController
@@ -188,9 +189,9 @@ class ExamCrudController extends CrudController
                           ],
                     ],
                     [   // CustomHTML
-                        'name'  => 'separator',
-                        'type'  => 'custom_html',
-                        'value' => '<a href="{{backpack_url(`question`)}}" target="_blank">Go to question ></a>'
+                        'name'  => 'question_id',
+                        'type'  => 'html_question',
+                        'label' => 'Go to question',
                     ],
 
                     
@@ -288,7 +289,7 @@ class ExamCrudController extends CrudController
         $this->crud->hasAccessOrFail('update');
         // get entry ID from Request (makes sure its the last ID for nested resources)
         $id = $this->crud->getCurrentEntryId() ?? $id;
-        $questions=Question::where('exam_id','=',$id)->get();
+        $questions=DB::table('questions')->select('questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_no','questions.question_type','questions.exam_id')->where('exam_id','=',$id)->get();
         $u=$this->crud->getUpdateFields();
         $u['questions']['value'] = json_encode($questions);
         $this->crud->setOperationSetting('fields', $u);
@@ -304,4 +305,11 @@ class ExamCrudController extends CrudController
         // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
         return view($this->crud->getEditView(),$this->data);
     }
+
+    // public function getIDQuestion($id){
+    //     $id = $this->crud->getCurrentEntryId() ?? $id;
+    //     $questions=Question::where('exam_id','=',$id)->get();
+    //     dd($questions);
+    //     return view('vendor.backpack.crud.fields.html_question',compact($questions));
+    // }
 }

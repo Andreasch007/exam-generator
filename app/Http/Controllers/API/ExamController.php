@@ -172,7 +172,7 @@ class ExamController extends BaseController
                 $userapproval = DB::table('user_approvals')
                                 ->join('companies','user_approvals.company_id','companies.id')
                                 ->join('users','user_approvals.user_id','users.id')
-                                ->select('users.id','companies.name')
+                                ->select('users.id','companies.name','user_approvals.approval')
                                 ->where('users.email',$email)
                                 ->get();
             }
@@ -199,9 +199,10 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
-                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 'exams.exam_rule')
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 
+                        'exams.exam_rule', 'task_journal_exams.flag_done')
                         ->where('users.email','=',$email)
-                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }

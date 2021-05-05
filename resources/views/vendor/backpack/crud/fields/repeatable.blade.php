@@ -136,7 +136,7 @@
             // make sure the inputs no longer have a "name" attribute,
             // so that the form will not send the inputs as request variables;
             // use a "data-repeatable-input-name" attribute to store the same information;
-            container.find('input, select, textarea')
+            container.find('input, select, textarea, p')
                     .each(function(){
                         if ($(this).data('name')) {
                             var name_attr = $(this).data('name');
@@ -197,7 +197,7 @@
             var container_holder = $('[data-repeatable-holder='+field_name+']');
 
             new_field_group.find('.delete-element').click(function(){
-                new_field_group.find('input, select, textarea').each(function(i, el) {
+                new_field_group.find('input, select, textarea, p').each(function(i, el) {
                     // we trigger this event so fields can intercept when they are beeing deleted from the page
                     // implemented because of ckeditor instances that stayed around when deleted from page
                     // introducing unwanted js errors and high memory usage.
@@ -215,7 +215,7 @@
 
             if (values != null) {
                 // set the value on field inputs, based on the JSON in the hidden input
-                new_field_group.find('input, select, textarea').each(function () {
+                new_field_group.find('input, select, textarea, p').each(function () {
                     if ($(this).data('repeatable-input-name')) {
 
                         // if the field provides a `data-value-prefix` attribute, we should respect that and add that prefix to the value.
@@ -258,7 +258,7 @@
                 $(".increment input").eq(j).val(rowNumber)
                 $(".increment2 input").eq(j).val(rowNumber)
                 //also attach the row number to all the input elements inside
-                $(el).find('input, select, textarea').each(function(i, el) {
+                $(el).find('input, select, textarea, p').each(function(i, el) {
                     $(el).attr('data-row-number', rowNumber);
                     // $(".count input").eq(j).val(rowNumber)
                 });
