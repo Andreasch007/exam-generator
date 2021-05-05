@@ -288,6 +288,28 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
     }
+
+    public function getExamRule(Request $request){
+        if(isset($_POST['email']) && isset($_POST['exam_id'])){
+            $email = $_POST['email'];
+            $exam_id=$_POST['exam_id'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'))
+                    ->where('email',$email)
+                    ->first();
+            if($query->totalemail>=1){
+                $examrule = DB::table('exams')
+                            ->join('users','exams.company_id','=','users.company_id')
+                            ->select('exams.exam_rule')
+                            ->where('users.email','=',$email)
+                            ->where('exams.id',$exam_id)
+                            ->get();
+            }
+            return $this->sendResponse($examrule, 'Success');
+         }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
     
     public function forgotPassword(Request $request){
         $validator = Validator::make($request->all(), [
