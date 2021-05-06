@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Company;
 use App\Models\UserApproval;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
 // use Illuminate\Support\Facades\Password;
@@ -301,14 +302,16 @@ class ExamController extends BaseController
                  ->select('name')
                  ->where('email',$input['email'])
                  ->first();
-                        
+                
+                $new_password = Str::random(7);       
                 $data = array($query2->name);
-                Mail::send([],[], function($message) use($input) {
+                Mail::send([],[], function($message) use($input, $new_password) {
+                    
                     $message->to($input['email'])
                             ->subject('Your New Password ')
                             ->setBody(
                                 '<html><h3>This is your New Password = </h3>
-                                <br><bold> 12345678 </bold>
+                                <br><bold> '.$new_password.' </bold>
                                 <br><br><bold> Please remember your password AND Do Not Share Your Password
                                 to Anyone !!! </bold></html>','text/html'
                             );
@@ -317,13 +320,13 @@ class ExamController extends BaseController
                 $update = DB::table('users')
                 ->where('email',$input['email'])
                 ->update([
-                            'password' => bcrypt('password')
+                            'password' => bcrypt($new_password)
                         ]);
                 return $this->sendResponse($update, 'Message Sent. Please Check Your Email');
             }
         else
         { 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendError('Email tidak terdaftar.', ['error'=>'Unauthorised']);
         }
                         // try 
                         // {
