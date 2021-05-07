@@ -109,6 +109,48 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
+    
+    public function unfollowCompany(Request $request){
+        if(isset($_POST['email']) && isset($_POST['company_id'])){
+            $email = $_POST['email'];
+            $company_id = $_POST['company_id'];
+            $query = DB::table('users')
+                    ->select(DB::raw('COUNT(users.id) as totalemail'),'id','company_id')
+                    ->where('email',$email)
+                    ->groupBy('id','company_id')
+                    ->first();
+            $check = DB::table('user_approvals')
+                     ->select(DB::raw('COUNT(id) as totalapproval'))
+                     ->where('user_id',$query->id)
+                     ->where('company_id',$company_id)
+                    //  ->groupBy('id','company_id')
+                     ->first();
+            if($query->totalemail>=1){
+                    if($check->totalapproval!=0){
+                        $delete = UserApproval::destroy([
+                                    'company_id'=>$company_id,
+                                    'user_id'=>$query->id
+                                ]);
+                        $response = array("error" => true);
+                        $response["error"] = FALSE;
+                        $response["message"] = "Request Success !";
+                    
+                        return json_encode($response); 
+                    }
+                    else{
+                        $response = array("error" => FALSE);
+                        $response["error"] = TRUE;
+                        $response["message"] = "You havent follow this company!";
+    
+                        return json_encode($response);
+                    }
+                
+            }
+            return $this->sendResponse($delete, 'Success');
+        }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
 
     public function sendApproval(Request $request){
         if(isset($_POST['email']) && isset($_POST['company_id'])){

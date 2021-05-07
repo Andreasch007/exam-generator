@@ -34,5 +34,5 @@ Route::post('save-data','App\Http\Controllers\API\ExamController@updateCompany')
 Route::post('forgotpassword','App\Http\Controllers\API\ExamController@forgotPassword');
 Route::post('sendapproval','App\Http\Controllers\API\ExamController@sendApproval');
 Route::post('getapproval','App\Http\Controllers\API\ExamController@getUserApproval');
-// Route::post('changepassword','App\Http\Controllers\API\ExamController@changePassword');
+Route::post('unfollow','App\Http\Controllers\API\ExamController@unfollowCompany');
 
