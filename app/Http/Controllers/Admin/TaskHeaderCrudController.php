@@ -49,7 +49,6 @@ class TaskHeaderCrudController extends CrudController
                 ->select('users.player_id as player_id')
                 ->where('task_trans_details.header_id',$id)
                 ->get();
-        
         foreach($user as $users){
             $array_user[]=$users->player_id;
         }
@@ -194,7 +193,8 @@ class TaskHeaderCrudController extends CrudController
                         'attribute' =>  'name',
                         'options'   => (function ($query) {
                             $user = Auth::user();
-                            return $query->join('user_approvals','users.id','user_approvals.user_id')->where('user_approvals.company_id', $user->company_id)->where('user_approvals.approval','Approved')->get();
+                            return $query->join('user_approvals','users.id','user_approvals.user_id')
+								->select('users.id','user_approvals.id as approval_id','users.name')->where('user_approvals.company_id', $user->company_id)->where('user_approvals.approval','Approved')->get();
                         }), 
                         // 'wrapperAttributes' => [
                         //     'class' => 'form-group col-md-8'
