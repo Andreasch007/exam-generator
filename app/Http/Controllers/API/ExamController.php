@@ -17,6 +17,7 @@ use DB;
 use Mail;
 use Validator;
 use Carbon;
+use OneSignal;
 // use Message;
 
 class ExamController extends BaseController
@@ -312,9 +313,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $examrule = DB::table('exams')
-                            ->join('users','exams.company_id','=','users.company_id')
                             ->select("exams.exam_rule")
-                            ->where('users.email','=',$email)
                             ->where('exams.id',$exam_id)
                             ->get();
             }
@@ -475,7 +474,7 @@ class ExamController extends BaseController
 
     public function createTask(){
         if(isset($_POST['exam_no']) && isset($_POST['uid']) && isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['company_id'])){
-            $exam_no = $_POST['exam_no'];
+            $exam_no=$_POST['exam_no'];
             $start_time = $_POST['start_time']; 
             $end_time = $_POST['end_time'];
             $uid = json_decode($_POST['uid'],true);
@@ -484,35 +483,70 @@ class ExamController extends BaseController
             $examID = Exam::select('id')->where('exam_no',$exam_no)->first();
 
             foreach($uid as $uids){
-               $user[]=DB::table('users')->select('id')->where('uid',$uids)->first();
+               $user[]=DB::table('users')->select('id','player_id')->where('uid',$uids)->first();
             }
-       
+
+            $taskheader = TaskHeader::create([
+                'start_time' => $start_time,
+                'end_time'  => $end_time,
+                'exam_id' => $examID->id,
+                'company_id' => $company_id
+                // 'doc_date' => Carbon::now()
+            ]);
             foreach($user as $users){
-                if($users->id!=null){
-                    $taskheader = TaskHeader::create([
-                        'start_time' => $start_time,
-                        'end_time'  => $end_time,
-                        'exam_id' => $examID->id,
-                        'company_id' => $company_id
-                        // 'doc_date' => Carbon::now()
-                    ]);
-    
                     $taskdetail = TaskDetail::create([
                         'user_id' => $users->id,
                         'header_id' => $taskheader->id
                     ]);
-                    
-                }
-            }  
-           
+            }
+            
+            $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
+            $user_playerID = DB::table('users')
+            ->join('task_trans_details','users.id','task_trans_details.user_id')
+            ->select('users.player_id as player_id')
+            ->where('task_trans_details.header_id',$taskheader->id)
+            ->get();
+
+            foreach($user_playerID as $users){
+                $array_user[]=$users->player_id;
+            }
+            $oneSignal = OneSignal::sendNotificationCustom([
+                'contents' => [
+                    'en' => 'You got a new exam! ',
+                ],
+                'include_player_ids' => $array_user
+            ]);
             $response = array("error" => true);
             $response["error"] = FALSE;
-            $response["message"] = "Success Create Task!";
+            $response["message"] = "Success Create Task !";
         
             return json_encode($response); 
-        } else {
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
     }
+
+    public function updateFlagDone(){
+        if(isset($_POST['email'])  && isset($_POST['flag']) && isset($_POST['exam_id'])){
+            $email = $_POST['email'];
+            $exam_id=$_POST['exam_id'];
+            $flag=$_POST['flag']; 
+            $query = DB::table('users')
+            ->select(DB::raw('COUNT(users.id) as totalemail'))
+            ->where('email',$email)
+            ->first();
+            if($query->totalemail>=1){
+                $update = DB::table('task_journal_exams')
+                          ->join('users','task_journal_exams.user_id','=','users.id')
+                          ->where('users.email',$email)
+                          ->where('task_journal_exams.exam_id',$exam_id)
+                          ->update([
+                              'flag_done'=>$flag
+                          ]);
+            }
+            return $this->sendResponse($update, 'Success');
+        }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
+    
     
 }

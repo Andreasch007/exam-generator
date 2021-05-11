@@ -37,6 +37,8 @@ class TaskHeaderCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/taskheader');
         CRUD::setEntityNameStrings('task', 'task');
         $this->crud->addButtonFromModelFunction('line', 'generate_task', 'buttonGenerate', 'beginning');
+        $this->crud->addButtonFromModelFunction('line', 'open_result', 'openResult', 'end');    
+        CRUD::denyAccess('show');
         $user = Auth::user();
         $this->crud->addClause('where', 'company_id', '=', $user->company_id);
     }

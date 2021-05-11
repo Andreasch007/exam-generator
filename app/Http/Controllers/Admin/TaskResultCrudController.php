@@ -50,30 +50,30 @@ class TaskResultCrudController extends CrudController
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
         CRUD::addColumns([
-            [
-                'label'    =>  'Extern No',
-                'name'     =>  'extern_no',
-                'type'     =>  'text',
-                'limit'    => 50
-            ],
-            [
-                'label'    =>  'Date',
-                'name'     =>  'created_at',
-                'type'  =>  'date',
-                'searchlable'   => true
-            ],
+            // [
+            //     'label'    =>  'Extern No',
+            //     'name'     =>  'extern_no',
+            //     'type'     =>  'text',
+            //     'limit'    => 50
+            // ],
+            // [
+            //     'label'    =>  'Date',
+            //     'name'     =>  'created_at',
+            //     'type'  =>  'date',
+            //     'searchlable'   => true
+            // ],
             [
                 'label'    =>  'User',
                 'name'     =>  'user_name',
                 'type'     =>  'text',
                 'limit'    => 2000
             ],
-            [
-                'label'    =>  'Exam',
-                'name'     =>  'exam_name',
-                'type'     =>  'text',
-                'limit'    => 2000
-            ],
+            // [
+            //     'label'    =>  'Exam',
+            //     'name'     =>  'exam_name',
+            //     'type'     =>  'text',
+            //     'limit'    => 2000
+            // ],
             [
                 'label'    =>  'Question',
                 'name'     =>  'question_desc1',
@@ -87,8 +87,8 @@ class TaskResultCrudController extends CrudController
                 'limit'    => 2000
             ],
             [
-                'label'    =>  'Answer Result',
-                'name'     =>  'result',
+                'label'    =>  'Answer Desc',
+                'name'     =>  'answer_desc1',
                 'type'     =>  'text',
                 'limit'    => 2000
             ]
@@ -140,6 +140,7 @@ class TaskResultCrudController extends CrudController
 
     public function search()
     {
+        $id = request('id');
         $user = Auth::user();
         $this->crud->hasAccessOrFail('list');
 
@@ -152,9 +153,10 @@ class TaskResultCrudController extends CrudController
         ->join('task_journal_answers','task_journal_questions.id','=','task_journal_answers.hdr_qid')
         ->join('answers','task_journal_answers.answer_id','answers.id')
         ->join('users','task_journal_exams.user_id','users.id')
-        ->select('task_trans_headers.extern_no', 'exams.exam_name','task_journal_exams.created_at','questions.question_desc1','answers.answer_val','task_journal_answers.result', 'users.name as user_name')
+        ->select('task_trans_headers.extern_no', 'exams.exam_name','task_journal_exams.created_at','questions.question_desc1','answers.answer_val','answers.answer_desc1','task_journal_answers.result', 'users.name as user_name')
         ->where('task_trans_headers.company_id',$user->company_id)
         ->where('task_journal_answers.result','!=','')
+        ->where('task_journal_exams.header_id',$id)
         ->get();
    
 
