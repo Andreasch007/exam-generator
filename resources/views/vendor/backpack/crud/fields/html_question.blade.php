@@ -1,6 +1,6 @@
 <!-- used for heading, separators, etc -->
 @include('crud::fields.inc.wrapper_start')
-	<a href="#">{!!  $field['label']  !!}</a>
+	<a href="#">{!!  $field['value']  !!}</a>
 @include('crud::fields.inc.wrapper_end')
 
 <!-- <script>

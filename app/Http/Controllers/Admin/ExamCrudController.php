@@ -56,11 +56,11 @@ class ExamCrudController extends CrudController
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
          */
         CRUD::addColumns([
-            // [
-            //    'label' =>  'No',
-            //    'name'  =>  'exam_no',
-            //    'type'  =>  'number'
-            // ],
+             [
+               'label' =>  'No',
+               'name'  =>  'exam_no',
+               'type'  =>  'text'
+            ],
             [
                'label' => 'Category',
                'name'  => 'category_id',
@@ -97,11 +97,14 @@ class ExamCrudController extends CrudController
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
         CRUD::addFields([
-            // [
-            //     'label'     => 'No',
-            //     'name'      => 'exam_no',
-            //     'type'      => 'number',
-            // ],
+			[
+                'label'     => 'No',
+                'name'      => 'exam_no',
+                'type'      => 'text',
+                'attributes'=> [
+                    'readonly'=>'readonly'
+                ]
+			],
             [
                 'label'     => 'Exam Name',
                 'name'      => 'exam_name',
@@ -125,7 +128,7 @@ class ExamCrudController extends CrudController
             [
                 'label'     => 'Rule',
                 'name'      => 'exam_rule',
-                'type'      => 'wysiwyg'
+                'type'      => 'textarea'
             ],
             // [   // Table
             //     'name'            => 'questions',
@@ -242,6 +245,7 @@ class ExamCrudController extends CrudController
                 $questions->save();
             }
         }
+		 DB::select('CALL ExamNo_Generate('.$exam->id.')');
  
         return redirect('exam');
     }   
@@ -271,6 +275,7 @@ class ExamCrudController extends CrudController
                 $questions->save();
             }
         }
+		
        
         // $answer = Answer::where('question_id',$id)->first();
 

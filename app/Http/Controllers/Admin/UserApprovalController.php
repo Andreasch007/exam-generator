@@ -153,4 +153,5 @@ class UserApprovalController extends CrudController
         $this->setupCreateOperation();
     }
 
+
 }

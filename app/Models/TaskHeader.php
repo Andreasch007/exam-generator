@@ -42,8 +42,8 @@ class TaskHeader extends Model
                 console.log(ele);
                 $.ajax({
                         type: "POST",
-                        url: "https://exam.nocortech.com/generate/"+ele,
-                        // url: "http://localhost/exam-generator/public/generate/"+ele,
+                        //url: "https://exam.nocortech.com/generate/"+ele,
+                         url: "http://localhost/exam-generator/public/generate/"+ele,
                         dataType: "json",
                     }).done(function(){
                         alert("Success Generate");
@@ -53,10 +53,27 @@ class TaskHeader extends Model
                 alert ("Generate Canceled!");
             }
         }
-        // $("#btn-gen").click(function() {
-           
-        // });
         </script>';
+    }
+
+    public function openResult(){
+        return '<button class="btn btn-sm btn-success" id="btn-gen" onclick=openResult('.$this->id.') type="button">Result</button>
+        <script>
+        window.openResult=function(ele){
+            var row = $(ele).closest("tr");
+            console.log(row);
+            console.log(ele);
+            // $.ajax({
+            //         type: "POST",
+            //         //url: "https://exam.nocortech.com/generate/"+ele,
+            //             url: "http://localhost/exam-generator/public/taskresult/",
+            //         dataType: "json",
+            //     }).done(function(data){
+                    window.open("http://localhost/exam-generator/public/taskresult?id="+ele,"_self")
+            // }); 
+        }
+        </script>';
+
     }
 
     // public function generateTask($id){

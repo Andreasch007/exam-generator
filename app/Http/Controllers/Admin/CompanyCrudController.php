@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\UserApproval;
 use DB;
 /**
  * Class CompanyCrudController
@@ -122,8 +123,13 @@ class CompanyCrudController extends CrudController
         $userupdate = User::where('id','=',$user->id)
         ->update([
             'company_id'    =>  $company->id,
-            'approved'      => 1
         ]);
+		
+		$userapproval = UserApproval::create([
+			'user_id' => $user->id,
+			'company_id' => $company->id,
+            'approval' => 'Approved'
+		]);
  
         return redirect('company');
     }   

@@ -57,6 +57,7 @@ class RegisterController extends BaseController
      */
     public function login(Request $request)
     {
+        echo($request->password);
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) && isset($_POST['playerID']) && isset($_POST['uid'])){ 
             $user = Auth::user(); 
             $playerID = $_POST['playerID'];
@@ -82,6 +83,7 @@ class RegisterController extends BaseController
             $response["message"] = "Incorrect Email or Password!";
 
             return json_encode($response);
+            // return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
 }

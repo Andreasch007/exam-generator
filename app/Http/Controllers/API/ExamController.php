@@ -8,13 +8,16 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\UserApproval;
+use App\Models\TaskHeader;
+use App\Models\TaskDetail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
 // use Illuminate\Support\Facades\Password;
 use Mail;
 use Validator;
+use Carbon;
+use OneSignal;
 // use Message;
 
 class ExamController extends BaseController
@@ -80,7 +83,7 @@ class ExamController extends BaseController
                            ->select('companies.*')
                            ->distinct()
                            ->get();
-            
+       
                 return $this->sendResponse($company, 'Success');
              }
             else{ 
@@ -88,29 +91,8 @@ class ExamController extends BaseController
             } 
         }
     }
-
-    public function getUserApproval(){
-        if(isset($_POST['email'])){
-            $email = $_POST['email'];
-            $query = DB::table('users')
-            ->select(DB::raw('COUNT(users.id) as totalemail'))
-            ->where('email',$email)
-            ->first();
-            if($query->totalemail>=1){
-                $userapproval = DB::table('user_approvals')
-                                ->join('companies','user_approvals.company_id','companies.id')
-                                ->join('users','user_approvals.user_id','users.id')
-                                ->select('users.id','companies.name')
-                                ->where('users.email',$email)
-                                ->get();
-            }
-            return $this->sendResponse($userapproval, 'Success');
-        }else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
-    }
-    
-    public function unfollowCompany(Request $request){
+	
+	public function unfollowCompany(Request $request){
         if(isset($_POST['email']) && isset($_POST['company_id'])){
             $email = $_POST['email'];
             $company_id = $_POST['company_id'];
@@ -120,36 +102,37 @@ class ExamController extends BaseController
                     ->groupBy('id','company_id')
                     ->first();
             $check = DB::table('user_approvals')
-                     ->select(DB::raw('COUNT(id) as totalapproval'))
-                     ->where('user_id',$query->id)
-                     ->where('company_id',$company_id)
+                    ->select(DB::raw('COUNT(id) as totalapproval'))
+                    ->where('user_id',$query->id)
+                    ->where('company_id',$company_id)
                     //  ->groupBy('id','company_id')
-                     ->first();
+                    ->first();
             if($query->totalemail>=1){
-                    if($check->totalapproval!=0){
-                        $delete = UserApproval::where('company_id',$company_id)
-                        ->where('user_id',$query->id)
-                        ->delete();
-                        $response = array("error" => true);
-                        $response["error"] = FALSE;
-                        $response["message"] = "Request Success !";
-                    
-                        return json_encode($response); 
-                    }
-                    else{
-                        $response = array("error" => FALSE);
-                        $response["error"] = TRUE;
-                        $response["message"] = "You havent follow this company!";
-    
-                        return json_encode($response);
-                    }
+                if($check->totalapproval!=0){
+                    $delete = UserApproval::destroy([
+                                'company_id'=>$company_id,
+                                'user_id'=>$query->id
+                            ]);
+                    $response = array("error" => true);
+                    $response["error"] = FALSE;
+                    $response["message"] = "Request Success !";
+                
+                    return json_encode($response); 
+                }else{
+                    $response = array("error" => FALSE);
+                    $response["error"] = TRUE;
+                    $response["message"] = "You havent follow this company!";
+
+                    return json_encode($response);
+                }
                 
             }
             return $this->sendResponse($delete, 'Success');
         }else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        } 
+        }
     }
+           
 
     public function sendApproval(Request $request){
         if(isset($_POST['email']) && isset($_POST['company_id'])){
@@ -193,7 +176,26 @@ class ExamController extends BaseController
         } 
     }
 
-    
+    public function getUserApproval(){
+        if(isset($_POST['email'])){
+            $email = $_POST['email'];
+            $query = DB::table('users')
+            ->select(DB::raw('COUNT(users.id) as totalemail'))
+            ->where('email',$email)
+            ->first();
+            if($query->totalemail>=1){
+                $userapproval = DB::table('user_approvals')
+                                ->join('companies','user_approvals.company_id','companies.id')
+                                ->join('users','user_approvals.user_id','users.id')
+                                ->select('users.id','companies.name','user_approvals.approval')
+                                ->where('users.email',$email)
+                                ->get();
+            }
+            return $this->sendResponse($userapproval, 'Success');
+        }else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
         
 
     public function getExam(Request $request){
@@ -212,9 +214,10 @@ class ExamController extends BaseController
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
-                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 'exams.exam_rule')
+                        'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 
+                        'exams.exam_rule', 'task_journal_exams.flag_done')
                         ->where('users.email','=',$email)
-                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }
@@ -279,9 +282,8 @@ class ExamController extends BaseController
     }
 
     public function updateCompany(Request $request){
-        if(isset($_POST['email']) && isset($_POST['company_id'])){
+        if(isset($_POST['email'])){
             $email = $_POST['email'];
-            $company_id = $_POST['company_id'];
             $name = $_POST['name'];
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
@@ -292,7 +294,6 @@ class ExamController extends BaseController
                 $update = DB::table('users')
                 ->where('email',$email)
                 ->update([
-                    'company_id'=>$company_id,
                     'name'=>$name
                 ]);
             }
@@ -312,9 +313,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 $examrule = DB::table('exams')
-                            ->join('users','exams.company_id','=','users.company_id')
-                            ->select('exams.exam_rule')
-                            ->where('users.email','=',$email)
+                            ->select("exams.exam_rule")
                             ->where('exams.id',$exam_id)
                             ->get();
             }
@@ -423,6 +422,58 @@ class ExamController extends BaseController
         } 
     }
 
+    public function createTask(){
+        if(isset($_POST['exam_no']) && isset($_POST['uid']) && isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['company_id'])){
+            $exam_no=$_POST['exam_no'];
+            $start_time = $_POST['start_time']; 
+            $end_time = $_POST['end_time'];
+            $uid = json_decode($_POST['uid'],true);
+            $company_id=$_POST['company_id'];
+
+            $examID = Exam::select('id')->where('exam_no',$exam_no)->first();
+
+            foreach($uid as $uids){
+               $user[]=DB::table('users')->select('id','player_id')->where('uid',$uids)->first();
+            }
+
+            $taskheader = TaskHeader::create([
+                'start_time' => $start_time,
+                'end_time'  => $end_time,
+                'exam_id' => $examID->id,
+                'company_id' => $company_id
+                // 'doc_date' => Carbon::now()
+            ]);
+            foreach($user as $users){
+                    $taskdetail = TaskDetail::create([
+                        'user_id' => $users->id,
+                        'header_id' => $taskheader->id
+                    ]);
+            }
+            
+            $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
+            $user_playerID = DB::table('users')
+            ->join('task_trans_details','users.id','task_trans_details.user_id')
+            ->select('users.player_id as player_id')
+            ->where('task_trans_details.header_id',$taskheader->id)
+            ->get();
+
+            foreach($user_playerID as $users){
+                $array_user[]=$users->player_id;
+            }
+            $oneSignal = OneSignal::sendNotificationCustom([
+                'contents' => [
+                    'en' => 'You got a new exam! ',
+                ],
+                'include_player_ids' => $array_user
+            ]);
+            $response = array("error" => true);
+            $response["error"] = FALSE;
+            $response["message"] = "Success Create Task !";
+        
+            return json_encode($response); 
+        }
+    }
+
     public function updateFlagDone(){
         if(isset($_POST['email'])  && isset($_POST['flag']) && isset($_POST['exam_id'])){
             $email = $_POST['email'];
@@ -446,5 +497,6 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
+    
     
 }
