@@ -28,7 +28,15 @@ class Company extends Model
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
-    */    
+    */   
+    public function openApproval(){
+        return '<button class="btn btn-sm btn-success" id="btn-gen" onclick=openApproval() type="button">Go to user approval</button>
+        <script>
+        window.openApproval=function(){
+            window.open("http://localhost/exam-generator/public/UserApproval","_self")
+        }
+        </script>';
+    } 
 
     /*
     |--------------------------------------------------------------------------

@@ -33,6 +33,7 @@ class CompanyCrudController extends CrudController
         CRUD::setModel(\App\Models\Company::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/company');
         CRUD::setEntityNameStrings('company', 'companies');
+        $this->crud->addButtonFromModelFunction('top', 'open_approval', 'openApproval', 'start');    
         $user = Auth::user();
         $this->crud->addClause('where', 'id', '=', $user->company_id);
         $count = DB::table('companies')->select(DB::raw('COUNT(*) as counts'))->where('id',$user->company_id)->get();

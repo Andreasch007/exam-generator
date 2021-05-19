@@ -106,7 +106,7 @@
             var container = $('[data-repeatable-holder='+container_name+']');
 
             container.find('.well').each(function () {
-                $(this).find('input, select, textarea').each(function () {
+                $(this).find('input, select, textarea, button').each(function () {
                     if ($(this).data('repeatable-input-name')) {
                         obj[$(this).data('repeatable-input-name')] = $(this).val();
                     }
@@ -136,7 +136,7 @@
             // make sure the inputs no longer have a "name" attribute,
             // so that the form will not send the inputs as request variables;
             // use a "data-repeatable-input-name" attribute to store the same information;
-            container.find('input, select, textarea, p')
+            container.find('input, select, textarea, a')
                     .each(function(){
                         if ($(this).data('name')) {
                             var name_attr = $(this).data('name');
@@ -197,7 +197,7 @@
             var container_holder = $('[data-repeatable-holder='+field_name+']');
 
             new_field_group.find('.delete-element').click(function(){
-                new_field_group.find('input, select, textarea, p').each(function(i, el) {
+                new_field_group.find('input, select, textarea, button').each(function(i, el) {
                     // we trigger this event so fields can intercept when they are beeing deleted from the page
                     // implemented because of ckeditor instances that stayed around when deleted from page
                     // introducing unwanted js errors and high memory usage.
@@ -215,7 +215,7 @@
 
             if (values != null) {
                 // set the value on field inputs, based on the JSON in the hidden input
-                new_field_group.find('input, select, textarea, p').each(function () {
+                new_field_group.find('input, select, textarea, a').each(function () {
                     if ($(this).data('repeatable-input-name')) {
 
                         // if the field provides a `data-value-prefix` attribute, we should respect that and add that prefix to the value.
@@ -225,13 +225,21 @@
                         let valuePrefix = $(this).data('value-prefix') ?? '';
 
                         $(this).val(valuePrefix+values[$(this).data('repeatable-input-name')]);
-
+                        
                         // if it's a Select input with no options, also attach the values as a data attribute;
                         // this is done because the above val() call will do nothing if the options aren't there
                         // so the fields themselves have to treat this use case, and look at data-selected-options
                         // and create the options based on those values
                         if ($(this).is('select') && $(this).children('option').length == 0) {
                           $(this).attr('data-selected-options', JSON.stringify(values[$(this).data('repeatable-input-name')]));
+                        }
+
+                        if($(this).is('a#form-question')){
+                            console.log($(this).val());
+                           $(this).click(function(){
+                            window.open("http://localhost/exam-generator/public/question/"+$(this).val()+"/edit","_self")
+                           })
+                            
                         }
                     }
                 });

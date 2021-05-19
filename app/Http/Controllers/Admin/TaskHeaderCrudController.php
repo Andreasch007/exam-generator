@@ -284,7 +284,7 @@ class TaskHeaderCrudController extends CrudController
         $this->crud->hasAccessOrFail('update');
         // get entry ID from Request (makes sure its the last ID for nested resources)
         $id = $this->crud->getCurrentEntryId() ?? $id;
-        $taskdetail=TaskDetail::where('header_id','=',$id)->get();
+        $taskdetail=DB::table('task_trans_details')->join('task_trans_headers','task_trans_details.header_id','task_trans_headers.id')->select('task_trans_details.*','task_trans_headers.*')->where('header_id','=',$id)->get();
         $u=$this->crud->getUpdateFields();
         $u['taskdetails']['value'] = json_encode($taskdetail);
         $this->crud->setOperationSetting('fields', $u);

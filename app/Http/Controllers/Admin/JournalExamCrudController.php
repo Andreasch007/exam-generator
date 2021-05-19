@@ -35,6 +35,7 @@ class JournalExamCrudController extends CrudController
         CRUD::denyAccess('create');
         CRUD::denyAccess('delete');
         CRUD::denyAccess('update');
+        CRUD::denyAccess('show');
         $this->crud->addClause('join', 'exams', function ($query){
             $user = Auth::user();
             $query->on('task_journal_exams.exam_id','exams.id')

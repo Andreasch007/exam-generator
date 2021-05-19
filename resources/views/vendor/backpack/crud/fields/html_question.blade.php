@@ -1,10 +1,6 @@
-<!-- used for heading, separators, etc -->
-@include('crud::fields.inc.wrapper_start')
-	<a href="#">{!!  $field['value']  !!}</a>
-@include('crud::fields.inc.wrapper_end')
 
-<!-- <script>
-    function editQuestion(id){
-        alert('exam_Id'+id)
-    }
-</script> -->
+
+<!-- text input -->
+@include('crud::fields.inc.wrapper_start')
+    <a href="#" id="form-question" value="{{ $field['value'] ?? '' }}" name="{{$field['name']}}">{!! $field['label'] !!}</a>
+@include('crud::fields.inc.wrapper_end')
