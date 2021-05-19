@@ -109,10 +109,7 @@ class ExamController extends BaseController
                     ->first();
             if($query->totalemail>=1){
                 if($check->totalapproval!=0){
-                    $delete = UserApproval::destroy([
-                                'company_id'=>$company_id,
-                                'user_id'=>$query->id
-                            ]);
+                    $delete = UserApproval::where('company_id',$company_id)->where('user_id',$query->id)->delete(); 
                     $response = array("error" => true);
                     $response["error"] = FALSE;
                     $response["message"] = "Request Success !";
@@ -187,7 +184,7 @@ class ExamController extends BaseController
                 $userapproval = DB::table('user_approvals')
                                 ->join('companies','user_approvals.company_id','companies.id')
                                 ->join('users','user_approvals.user_id','users.id')
-                                ->select('users.id','companies.name','user_approvals.approval')
+                                ->select('users.id','companies.name','user_approvals.approval','companies.id as company_id')
                                 ->where('users.email',$email)
                                 ->get();
             }
@@ -371,7 +368,57 @@ class ExamController extends BaseController
                     
     }
 
-    
+    // public function changePassword(Request $request){
+    //     if(isset($_POST['email']) && isset($_POST['password'])){
+    //         $email = $_POST['email'];
+    //         $password = $_POST['password'];
+    //         $input = $request->all();
+    //         $userid = Auth::guard('api')->user()->id;
+    //         // $rules = array(
+    //         // 'old_password' => 'required',
+    //         // 'new_password' => 'required|min:6',
+    //         // 'confirm_password' => 'required|same:new_password',
+    //         // );
+    //         // $validator = Validator::make($input, $rules);
+    //         $query = DB::table('users')
+    //             ->select(DB::raw('COUNT(users.id) as totalemail'))
+    //             ->where('email',$email)
+    //             ->first();
+    //         if($query->totalemail>=1)
+    //         {
+    //             if ($validator->fails()) {
+    //                 $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+    //             } else {
+    //                 try {
+    //                     if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
+    //                         $arr = array("status" => 400, "message" => "Check your old password.", "data" => array());
+    //                     } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
+    //                         $arr = array("status" => 400, "message" => "Please enter a password which is not similar then current password.", "data" => array());
+    //                     } else {
+    //                         User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
+    //                         $update = DB::table('users')
+    //                         ->where('email',$email)
+    //                         ->update([
+    //                             'password'=>$password,
+    //                         ]);
+    //                         $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
+    //                     }
+    //                 } catch (\Exception $ex) {
+    //                     if (isset($ex->errorInfo[2])) {
+    //                         $msg = $ex->errorInfo[2];
+    //                     } else {
+    //                         $msg = $ex->getMessage();
+    //                     }
+    //                     $arr = array("status" => 400, "message" => $msg, "data" => array());
+    //                 }
+    //             }
+    //             return \Response::json($arr);
+    //         }
+    //         else{ 
+    //             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+    //         }
+    //     }
+    // }
     public function updateResultJournal(Request $request){
         if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id'])){
             $email = $_POST['email'];
@@ -422,9 +469,9 @@ class ExamController extends BaseController
         } 
     }
 
-    public function createTask(){
+  public function createTask(){
         if(isset($_POST['exam_no']) && isset($_POST['uid']) && isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['company_id'])){
-            $exam_no=$_POST['exam_no'];
+            $exam_no = $_POST['exam_no'];
             $start_time = $_POST['start_time']; 
             $end_time = $_POST['end_time'];
             $uid = json_decode($_POST['uid'],true);
@@ -450,8 +497,8 @@ class ExamController extends BaseController
                     ]);
             }
             
-            $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
-            $user_playerID = DB::table('users')
+             $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
+             $user_playerID = DB::table('users')
             ->join('task_trans_details','users.id','task_trans_details.user_id')
             ->select('users.player_id as player_id')
             ->where('task_trans_details.header_id',$taskheader->id)
@@ -470,11 +517,11 @@ class ExamController extends BaseController
             $response["error"] = FALSE;
             $response["message"] = "Success Create Task !";
         
-            return json_encode($response); 
+            return $response; 
         }
     }
-
-    public function updateFlagDone(){
+	
+	 public function updateFlagDone(){
         if(isset($_POST['email'])  && isset($_POST['flag']) && isset($_POST['exam_id'])){
             $email = $_POST['email'];
             $exam_id=$_POST['exam_id'];
@@ -497,6 +544,5 @@ class ExamController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
-    
     
 }
