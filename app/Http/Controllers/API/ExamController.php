@@ -105,6 +105,7 @@ class ExamController extends BaseController
                     ->select(DB::raw('COUNT(id) as totalapproval'))
                     ->where('user_id',$query->id)
                     ->where('company_id',$company_id)
+				    ->where('approval','Approved')
                     //  ->groupBy('id','company_id')
                     ->first();
             if($query->totalemail>=1){
@@ -206,15 +207,16 @@ class ExamController extends BaseController
             if($query->totalemail>=1){
                 
                 $exam = DB::table('exams')
-                        ->join('task_journal_exams','exams.id','task_journal_exams.exam_id')
+                        ->join('task_trans_headers','exams.id','task_trans_headers.exam_id')
+                        ->join('task_journal_exams','task_trans_headers.id','task_journal_exams.header_id')
                         ->join('users','task_journal_exams.user_id','=','users.id')
                         ->join('categories','exams.category_id','categories.id')
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
                         'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 
-                        'exams.exam_rule', 'task_journal_exams.flag_done')
+                        'exams.exam_rule', 'task_journal_exams.flag_done','task_journal_exams.header_id', 'task_trans_headers.extern_no')
                         ->where('users.email','=',$email)
-                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done', 'task_journal_exams.header_id','task_trans_headers.extern_no')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }
@@ -226,10 +228,10 @@ class ExamController extends BaseController
     }
 
     public function getQuestion(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id'])){
+        if(isset($_POST['email']) && isset($_POST['header_id'])){
             $user = Auth::user();
             $email = $_POST['email'];
-            $exam_id=$_POST['exam_id'];
+            $header_id=$_POST['header_id'];
             $query = DB::table('users')
                     ->select(DB::raw('COUNT(users.id) as totalemail'))
                     ->where('email',$email)
@@ -240,9 +242,10 @@ class ExamController extends BaseController
                         // ->join('answers','answers.question_id','=','questions.id')
                         ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                         ->join('users','task_journal_exams.user_id','=','users.id')
-                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type')
+					    ->join('task_trans_headers','task_journal_exams.header_id','task_trans_headers.id')
+                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'task_journal_exams.header_id')
                         // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
-                        ->where('questions.exam_id','=',$exam_id)
+                        ->where('task_journal_exams.header_id','=',$header_id)
                         ->where('users.email',$email)
                         ->orderBy('task_journal_questions.idx')
                         ->get();
@@ -255,8 +258,10 @@ class ExamController extends BaseController
                               ->join('task_journal_questions','task_journal_answers.hdr_qid','task_journal_questions.id')
                               ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                               ->join('users','task_journal_exams.user_id','=','users.id')
+						      ->join('task_trans_headers','task_journal_exams.header_id','task_trans_headers.id')
                               ->select('answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_no')
                               ->where('answers.question_id','=',$exams->question_id)
+						      ->where('task_journal_exams.header_id','=',$header_id)
                               ->where('users.email',$email)
                               ->orderBy('task_journal_answers.idx')
                               ->get();
@@ -266,6 +271,7 @@ class ExamController extends BaseController
                         'question_desc1'=>$exams->question_desc1,
                         'question_desc2'=>$exams->question_desc2,
                         'question_type'=>$exams->question_type,
+						'header_id' => $exams->header_id,
                         'answer'=>$answer
                     ];
                     
@@ -301,17 +307,18 @@ class ExamController extends BaseController
     }
 
     public function getExamRule(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id'])){
+        if(isset($_POST['email']) && isset($_POST['header_id'])){
             $email = $_POST['email'];
-            $exam_id=$_POST['exam_id'];
+            $header_id=$_POST['header_id'];
             $query = DB::table('users')
                     ->select(DB::raw('COUNT(users.id) as totalemail'))
                     ->where('email',$email)
                     ->first();
             if($query->totalemail>=1){
                 $examrule = DB::table('exams')
+					        ->join('task_trans_headers','exams.id','task_trans_headers.exam_id')
                             ->select("exams.exam_rule")
-                            ->where('exams.id',$exam_id)
+                            ->where('task_trans_headers.id',$header_id)
                             ->get();
             }
             return $this->sendResponse($examrule, 'Success');
@@ -420,9 +427,9 @@ class ExamController extends BaseController
     //     }
     // }
     public function updateResultJournal(Request $request){
-        if(isset($_POST['email']) && isset($_POST['exam_id']) && isset($_POST['question_id'])){
+        if(isset($_POST['email']) && isset($_POST['header_id']) && isset($_POST['question_id'])){
             $email = $_POST['email'];
-            $exam_id=$_POST['exam_id'];
+            $header_id=$_POST['header_id'];
             $question_id=$_POST['question_id'];
             $question_type=$_POST['question_type'];
             $answers=$_POST['answer'];
@@ -440,7 +447,7 @@ class ExamController extends BaseController
                             ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                             ->join('users','task_journal_exams.user_id','=','users.id')
                             ->where('users.email',$email)
-                            ->where('task_journal_exams.exam_id',$exam_id)
+                            ->where('task_journal_exams.header_id',$header_id)
                             ->where('task_journal_questions.question_id',$question_id)
                             ->where('task_journal_answers.answer_id',$data)
                             ->update([
@@ -454,7 +461,7 @@ class ExamController extends BaseController
                     ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                     ->join('users','task_journal_exams.user_id','=','users.id')
                     ->where('users.email',$email)
-                    ->where('task_journal_exams.exam_id',$exam_id)
+                    ->where('task_journal_exams.header_id',$header_id)
                     ->where('task_journal_questions.question_id',$question_id)
                     ->where('task_journal_answers.answer_id',$answers)
                     ->update([
@@ -482,7 +489,7 @@ class ExamController extends BaseController
             foreach($uid as $uids){
                $user[]=DB::table('users')->select('id','player_id')->where('uid',$uids)->first();
             }
-
+			
             $taskheader = TaskHeader::create([
                 'start_time' => $start_time,
                 'end_time'  => $end_time,
@@ -490,13 +497,15 @@ class ExamController extends BaseController
                 'company_id' => $company_id
                 // 'doc_date' => Carbon::now()
             ]);
+			
+			
             foreach($user as $users){
                     $taskdetail = TaskDetail::create([
                         'user_id' => $users->id,
                         'header_id' => $taskheader->id
                     ]);
             }
-            
+             $update=DB::select('CALL ExternNo_Generate('.$taskheader->id.')');
              $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
              $user_playerID = DB::table('users')
             ->join('task_trans_details','users.id','task_trans_details.user_id')
@@ -522,9 +531,9 @@ class ExamController extends BaseController
     }
 	
 	 public function updateFlagDone(){
-        if(isset($_POST['email'])  && isset($_POST['flag']) && isset($_POST['exam_id'])){
+        if(isset($_POST['email'])  && isset($_POST['flag']) && isset($_POST['header_id'])){
             $email = $_POST['email'];
-            $exam_id=$_POST['exam_id'];
+            $header_id=$_POST['header_id'];
             $flag=$_POST['flag']; 
             $query = DB::table('users')
             ->select(DB::raw('COUNT(users.id) as totalemail'))
@@ -534,7 +543,7 @@ class ExamController extends BaseController
                 $update = DB::table('task_journal_exams')
                           ->join('users','task_journal_exams.user_id','=','users.id')
                           ->where('users.email',$email)
-                          ->where('task_journal_exams.exam_id',$exam_id)
+                          ->where('task_journal_exams.header_id',$header_id)
                           ->update([
                               'flag_done'=>$flag
                           ]);
