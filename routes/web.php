@@ -16,7 +16,13 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('admin.dashboard');
 // });
-Route::namespace('App\Http\Controllers\Admin',)->group(function () {
+// Route::namespace('App\Http\Controllers\Admin',)->group(function () {
+//     // Controllers Within The "App\Http\Controllers\Admin" Namespace
+//     return view('dashboard');
+// });
+// Route::get('/testdashboard', 'DashboardController@index');
+Route::namespace('App\Http\Controllers\Frontend',)->group(function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
-    return backpack_url('dashboard');
+    Route::get('/testdashboard', 'DashboardController@index');
 });
+
