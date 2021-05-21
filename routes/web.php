@@ -23,6 +23,6 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/testdashboard', 'DashboardController@index');
 Route::namespace('App\Http\Controllers\Frontend',)->group(function () {
     // Controllers Within The "App\Http\Controllers\Admin" Namespace
-    Route::get('/testdashboard', 'DashboardController@index');
+    Route::get('/', 'DashboardController@index');
 });
 
