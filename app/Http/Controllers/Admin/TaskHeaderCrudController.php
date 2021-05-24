@@ -247,7 +247,7 @@ class TaskHeaderCrudController extends CrudController
             }
         }
         
-        DB::select('CALL ExternNo_Generate('.$taskheader->id.')');
+        //DB::select('CALL ExternNo_Generate('.$taskheader->id.')');
 
         return redirect('taskheader');
     }   

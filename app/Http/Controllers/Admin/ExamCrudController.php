@@ -191,16 +191,17 @@ class ExamCrudController extends CrudController
                             'class' => 'form-group col-md-2'
                           ],
                     ],
-                    // [   // CustomHTML
-                    //     'name'  => 'question_id',
-                    //     'type'  => 'html_question',
-                    //     'label' => 'Go to question',
-                    // ],
-
-                    
-                    // [
-                    //     ''
-                    // ]
+                    [   // CustomHTML
+                        'name'  => 'question_id',
+                        'type'  => 'html_question',
+                        'label' => 'Go to question',
+                    ],
+					[  
+                        'name'  => 'question_id',
+                        'type'  => 'number',
+                        'label' => 'id',
+						//'attribute' => 'hidden'
+                    ],
                 ],
             ],
         ]);
@@ -215,95 +216,7 @@ class ExamCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        CRUD::addFields([
-			[
-                'label'     => 'No',
-                'name'      => 'exam_no',
-                'type'      => 'text',
-                'attributes'=> [
-                    'readonly'=>'readonly'
-                ]
-			],
-            [
-                'label'     => 'Exam Name',
-                'name'      => 'exam_name',
-                'type'      => 'text',
-            ],
-            [
-                'label'     => "Category",
-                'type'      => 'select2',
-                'name'      => 'category_id', // the db column for the foreign key
-
-                // optional
-                'entity'    => 'category', // the method that defines the relationship in your Model
-                'model'     => "App\Models\Category", // foreign key model
-                'attribute' => 'category_name', // foreign key attribute that is shown to user
-
-                    // also optional
-                'options'   => (function ($query) {
-                        return $query->orderBy('category_name', 'ASC')->get();
-                    }), // force the related options to be a custom query, instead of all(); you can use this to filter the results show in the select
-            ],
-            [
-                'label'     => 'Rule',
-                'name'      => 'exam_rule',
-                'type'      => 'textarea'
-            ],
-            [   
-                'name'            => 'questions',
-                'label'           => 'Question',
-                'type'            => 'repeatable',
-                'fields'         => [
-                    [
-                        'name'     => 'question_no',
-                        'label' => 'No',
-                        'type'=> 'number_increment',
-                        'attributes' =>  [
-                            'readonly'=>'readonly',
-                        ],
-                        
-                        'wrapperAttributes' => [
-                            'class' => 'increment form-group col-md-2',
-                          ],
-                    ],
-                    [
-                        'name'     => 'question_desc1',
-                        'label' => 'Q. Desc1',
-                        'type'=> 'text',
-                        'wrapperAttributes' => [
-                            'class' => 'form-group col-md-4'
-                          ],
-                    ],
-                    [
-                        'name'     => 'question_desc2',
-                        'label' => 'Q. Desc2',
-                        'type'=> 'text',
-                        'wrapperAttributes' => [
-                            'class' => 'form-group col-md-4'
-                          ],
-                    ],
-                    [
-                        'name'     => 'question_type',
-                        'label' => 'Q. Type',
-                        'type'=> 'select_from_array',
-                        'options' => [
-                            'text'  => 'text',
-                            'check' => 'check',
-                            'radio' => 'radio'
-                        ],
-                        'wrapperAttributes' => [
-                            'class' => 'form-group col-md-2'
-                          ],
-                    ],
-                    [   // CustomHTML
-                        'name'  => 'question_id',
-                        'type'  => 'html_question',
-                        'label' => 'Go to question',
-                        // 'value' => '<a href="http://localhost/exam-generator/public/question/33/edit" >Go to question</a>'
-                    ],
-                ],
-            ],
-        ]);
+        $this->setupCreateOperation();
     }
 
     public function store(ExamRequest $request)
@@ -323,6 +236,7 @@ class ExamCrudController extends CrudController
 
         if($option!=''){
             foreach($option as $options){
+				
                 $questions = new Question();
                 $questions->question_no = $options->question_no;
                 $questions->question_desc1 = $options->question_desc1;
@@ -350,17 +264,28 @@ class ExamCrudController extends CrudController
         $exam->exam_name = $input['exam_name'];
         $exam->save();  
 
-        Question::where('exam_id',$id)->delete();
+        //Question::where('exam_id',$id)->delete();
         if($option!=''){
             foreach($option as $options){
-                $questions = new Question();
-                $questions->question_no = $options->question_no;
-                $questions->question_desc1 = $options->question_desc1;
-                $questions->question_desc2 = $options->question_desc2;
-                $questions->question_type = $options->question_type;
-                $questions->company_id = $user->company_id;
-                $questions->exam_id = $exam->id;
-                $questions->save();
+				$question_id[]=$options->question_id;
+                //$questions = new Question();
+                //$questions->question_no = $options->question_no;
+                //$questions->question_desc1 = $options->question_desc1;
+                //$questions->question_desc2 = $options->question_desc2;
+                //$questions->question_type = $options->question_type;
+                //$questions->company_id = $user->company_id;
+                //$questions->exam_id = $exam->id;
+                //$questions->save();
+				//$delete = Question::whereNotIn('id',$id)->where('exam_id',$exam->id)->delete();
+				$questions = Question::where('exam_id',$exam->id)->where('id',$options->question_id)
+					->update([
+						'question_no' => $options->question_no,
+						'question_desc1' => $options->question_desc1,
+						'question_desc2' => $options->question_desc2,
+						'question_type'  => $options->question_type,
+						'company_id'     => $user->company_id,
+						'exam_id'     	 => $exam->id
+					]);
             }
         }
 		
