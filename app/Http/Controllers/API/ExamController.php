@@ -13,6 +13,7 @@ use App\Models\TaskDetail;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController as BaseController;
 use DB;
+use Illuminate\Support\Str;
 // use Illuminate\Support\Facades\Password;
 use Mail;
 use Validator;
@@ -195,8 +196,7 @@ class ExamController extends BaseController
         } 
     }
         
-
-    public function getExam(Request $request){
+     function getExam(Request $request){
         if(isset($_POST['email'])){
             $user = Auth::user();
             $email = $_POST['email'];
@@ -214,9 +214,9 @@ class ExamController extends BaseController
                         ->join('task_journal_questions','task_journal_exams.id','task_journal_questions.hdr_id')
                         ->select('categories.category_name','exams.exam_name','exams.id','task_journal_exams.doc_date',
                         'task_journal_exams.start_time','task_journal_exams.end_time',DB::raw('COUNT(task_journal_questions.id) as jml'),DB::raw('TIMESTAMPDIFF(MINUTE,task_journal_exams.start_time,task_journal_exams.end_time) as waktu'), 
-                        'exams.exam_rule', 'task_journal_exams.flag_done','task_journal_exams.header_id', 'task_trans_headers.extern_no')
+                        'exams.exam_rule', 'task_journal_exams.flag_done','task_journal_exams.header_id', 'task_trans_headers.extern_no', 'task_trans_headers.doc_remark')
                         ->where('users.email','=',$email)
-                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done', 'task_journal_exams.header_id','task_trans_headers.extern_no')
+                        ->groupBy('categories.category_name','exams.exam_name','exams.id', 'task_journal_exams.doc_date','task_journal_exams.start_time','task_journal_exams.end_time','exams.exam_rule','task_journal_exams.flag_done', 'task_journal_exams.header_id','task_trans_headers.extern_no','task_trans_headers.doc_remark')
                         ->orderBy('task_journal_exams.start_time', 'DESC')
                         ->get();
             }
@@ -226,6 +226,7 @@ class ExamController extends BaseController
         } 
         
     }
+    
 
     public function getQuestion(Request $request){
         if(isset($_POST['email']) && isset($_POST['header_id'])){
@@ -243,7 +244,10 @@ class ExamController extends BaseController
                         ->join('task_journal_exams','task_journal_questions.hdr_id','=','task_journal_exams.id')
                         ->join('users','task_journal_exams.user_id','=','users.id')
 					    ->join('task_trans_headers','task_journal_exams.header_id','task_trans_headers.id')
-                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'task_journal_exams.header_id')
+					    ->join('exams','task_trans_headers.exam_id','=','exams.id')
+						->join('categories','exams.category_id','=','categories.id')
+                        ->select('questions.exam_id','questions.id as question_id','questions.question_desc1','questions.question_desc2','questions.question_type', 'task_journal_exams.header_id',
+								'task_trans_headers.extern_no','task_trans_headers.doc_remark','exams.exam_name','categories.category_name')
                         // 'answers.id as answer_id','answers.answer_desc1','answers.answer_desc2','answers.answer_val')
                         ->where('task_journal_exams.header_id','=',$header_id)
                         ->where('users.email',$email)
@@ -272,7 +276,13 @@ class ExamController extends BaseController
                         'question_desc2'=>$exams->question_desc2,
                         'question_type'=>$exams->question_type,
 						'header_id' => $exams->header_id,
+						'extern_no' =>$exams->extern_no,
+						'doc_remark' =>$exams->doc_remark,
+						'exam_name' =>$exams->exam_name,
+						'category_name' =>$exams->category_name,
                         'answer'=>$answer
+						
+						
                     ];
                     
                 }
@@ -283,6 +293,7 @@ class ExamController extends BaseController
         } 
         
     }
+    
 
     public function updateCompany(Request $request){
         if(isset($_POST['email'])){
@@ -476,14 +487,15 @@ class ExamController extends BaseController
         } 
     }
 
-  public function createTask(){
+public function createTask(){
         if(isset($_POST['exam_no']) && isset($_POST['uid']) && isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['company_id'])){
             $exam_no = $_POST['exam_no'];
             $start_time = $_POST['start_time']; 
             $end_time = $_POST['end_time'];
             $uid = json_decode($_POST['uid'],true);
             $company_id=$_POST['company_id'];
-
+			$extern_no =$_POST['extern_no'];
+			$remark =$_POST['remark'];
             $examID = Exam::select('id')->where('exam_no',$exam_no)->first();
 
             foreach($uid as $uids){
@@ -494,7 +506,9 @@ class ExamController extends BaseController
                 'start_time' => $start_time,
                 'end_time'  => $end_time,
                 'exam_id' => $examID->id,
-                'company_id' => $company_id
+                'company_id' => $company_id,
+				'extern_no' => $extern_no,
+				'doc_remark'   => $remark
                 // 'doc_date' => Carbon::now()
             ]);
 			
@@ -505,7 +519,7 @@ class ExamController extends BaseController
                         'header_id' => $taskheader->id
                     ]);
             }
-             $update=DB::select('CALL ExternNo_Generate('.$taskheader->id.')');
+             //$update=DB::select('CALL ExternNo_Generate('.$taskheader->id.')');
              $create = DB::select('CALL generate_transaction('.$taskheader->id.')');
              $user_playerID = DB::table('users')
             ->join('task_trans_details','users.id','task_trans_details.user_id')

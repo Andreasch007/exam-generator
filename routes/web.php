@@ -26,3 +26,10 @@ Route::namespace('App\Http\Controllers\Frontend',)->group(function () {
     Route::get('/', 'DashboardController@index');
 });
 
+Route::namespace('App\Http\Controllers\Frontend',)->group(function () {
+    Route::get('/verified', 'VerifiedController@index');
+});
+
+Route::namespace('App\Http\Controllers\Frontend',)->group(function () {
+    Route::get('/verifynumber', 'VerifyNumberController@index');
+});

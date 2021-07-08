@@ -81,7 +81,7 @@
                             <div class="device" data-device="iPhone6" data-orientation="portrait" data-color="white">
                                 <div class="screen">
                                     <!-- PUT CONTENTS HERE-->
-                                    <img class="img-fluid" src="assets/img/demo-screen-1.jpg" alt="..." />
+                                    <img class="img-fluid" src="assets/img/examlist.jpg" alt="..." />
                                 </div>
                                 <div class="button"><!-- You can hook the "home button" to some JavaScript events or just remove it--></div>
                             </div>
@@ -117,7 +117,7 @@
                             <div class="device" data-device="iPhone6" data-orientation="portrait" data-color="white">
                                 <div class="screen">
                                     <!-- PUT CONTENTS HERE-->
-                                    <img class="img-fluid" src="assets/img/demo-screen-1.jpg" alt="..." />
+                                    <img class="img-fluid" src="assets/img/questionanswer.jpg" alt="..." />
                                 </div>
                                 <div class="button"><!-- You can hook the "home button" to some JavaScript events or just remove it--></div>
                             </div>

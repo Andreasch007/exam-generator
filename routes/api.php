@@ -35,4 +35,5 @@ Route::post('forgotpassword','App\Http\Controllers\API\ExamController@forgotPass
 Route::post('sendapproval','App\Http\Controllers\API\ExamController@sendApproval');
 Route::post('unfollow','App\Http\Controllers\API\ExamController@unfollowCompany');
 Route::post('create-task','App\Http\Controllers\API\ExamController@createTask');
+Route::post('verification/{email}','App\Http\Controllers\API\RegisterController@updateVerification');
 
